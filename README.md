@@ -34,12 +34,18 @@ pip install -r requirements.in
 #### CRON
 
 Aby bot się uruchamiał, należy skopiować plik [cebulobot.cron](./cebulobot.cron)
-do katalogu `/etc/cron.d/`
+do katalogu `/etc/cron.d/`.
 
 
 #### Telegram API
 
-W kodzie trzeba uzupełnić TOKEN do API Telegrama.
+Trzeba skopiować sobie plik konfuguracyjny:
+```bash
+cp sample_config.py config.py
+```
+i uzupełnić jego zawartość.
+
+W kodzie trzeba uzupełnić `token` do API Telegrama.
 Można go uzyskać od [BotFathera](https://telegram.me/BotFather).
 
 Trzeba też wpsiać id kanału na którym bot ma pisać.

@@ -7,17 +7,16 @@ import lxml.html
 import requests
 import telepot
 
-TOKEN = NotImplemented  # generate token here: https://telegram.me/BotFather
-CHANNEL_ID = -99999999  # add bot to channel, send some message, then get update and find chat_id
+import config
 
 
 def send_message(message):
-    bot = telepot.Bot(TOKEN)
-    bot.sendMessage(CHANNEL_ID, message, parse_mode='markdown')
+    bot = telepot.Bot(config.TELEGRAM_TOKEN)
+    bot.sendMessage(config.TELEGRAM_CHANNEL_ID, message, parse_mode='markdown')
 
 
 def get_update():
-    bot = telepot.Bot(TOKEN)
+    bot = telepot.Bot(config.TELEGRAM_TOKEN)
     pprint(bot.getUpdates())
 
 
@@ -50,10 +49,38 @@ def scrape(base_url: str) -> str:
     )
 
 
+def morele() -> str:
+    response = requests.get('https://www.morele.net/')
+    tree = lxml.html.fromstring(response.text)
+    promo = tree.xpath('//div[@class="promotion-product"]')[0]
+
+    product_link = promo.xpath('.//div[@class="product-name"]/a')[0]
+    product_name = product_link.text.strip()
+    product_url = product_link.get('href')
+    price = promo.xpath('.//div[@class="product-price"]')[0]
+    old_price = price.xpath('.//div[contains(@class, "old")]/span')[0].text.strip()
+    new_price = price.xpath('.//div[contains(@class, "new")]/span')[0].text.strip()
+    code = promo.xpath('.//div[@class="product-code"]')[0].text.strip()
+
+    return (
+        'Witam!\n'
+        'Dziś w promocji mamy: *{product_name}*\n'
+        'CENA: `{old_price} -> {new_price}`\n'
+        'KOD: `{code}`\n'
+        '[Link do promocji]({product_url})'
+    ).format(
+        product_name=product_name,
+        old_price=old_price,
+        new_price=new_price,
+        code=code,
+        product_url=product_url,
+    )
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Cebulo Boy main script')
     parser.add_argument(
-        'action', type=str, choices={'alto', 'xkom', 'update'},
+        'action', type=str, choices={'alto', 'xkom', 'morele', 'update'},
         help='service to scrape or print update to check `chat_id`')
     args = parser.parse_args()
     message = None
@@ -61,6 +88,8 @@ if __name__ == '__main__':
         message = scrape('https://al.to')
     elif args.action == 'xkom':
         message = scrape('https://x-kom.pl')
+    elif args.action == 'morele':
+        message = morele()
     elif args.action == 'update':
         get_update()
     else:
