@@ -2,3 +2,4 @@ telepot
 lxml
 requests
 sanic
+peewee

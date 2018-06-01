@@ -15,6 +15,7 @@ idna-ssl==1.0.1           # via aiohttp
 idna==2.6                 # via idna-ssl, requests, yarl
 lxml==4.2.1
 multidict==4.3.1          # via aiohttp, yarl
+peewee==3.5.0
 requests==2.18.4
 sanic==0.7.0
 telepot==12.6

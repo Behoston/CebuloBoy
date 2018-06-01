@@ -30,7 +30,13 @@ def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
     hot_shot_script = hot_shot.xpath('following-sibling::script')[0].text
     match = re.search(r'window\.location ?= ?(?P<link>.*);', hot_shot_script)
     url = base_url + json.loads(match.group('link'))
-    return models.Promotion(shop, product_name, old_price, new_price, url)
+    return models.Promotion(
+        shop=shop,
+        product_name=product_name,
+        old_price=old_price,
+        new_price=new_price,
+        url=url,
+    )
 
 
 def _price_parser(price: str) -> float:
@@ -55,9 +61,16 @@ def morele() -> models.Promotion:
     new_price = price.xpath('.//div[contains(@class, "new")]/span')[0].text.strip()
     new_price = _price_parser(new_price)
     code = promo.xpath('.//div[@class="product-code"]')[0].text.strip()
-    match = re.search(r'użyj kodu: (.*)', code)
+    match = re.search(r'użyj kodu:? (.*)', code)
     code = match.group(1)
-    return models.Promotion('morele', product_name, old_price, new_price, product_url, code)
+    return models.Promotion(
+        shop='morele',
+        product_name=product_name,
+        old_price=old_price,
+        new_price=new_price,
+        url=product_url,
+        code=code,
+    )
 
 
 if __name__ == '__main__':
