@@ -47,11 +47,14 @@ def _price_parser(price: str) -> float:
     return zlotowki + grosze / 100
 
 
-def morele() -> models.Promotion:
+def morele() -> models.Promotion or None:
     response = requests.get('https://www.morele.net/')
     tree = lxml.html.fromstring(response.text)
-    promo = tree.xpath('//div[@class="promotion-product"]')[0]
-
+    promo = tree.xpath('//div[@class="promotion-product"]')
+    if not promo:
+        return
+    else:
+        promo = promo[0]
     product_link = promo.xpath('.//div[@class="product-name"]/a')[0]
     product_name = product_link.text.strip()
     product_url = product_link.get('href')

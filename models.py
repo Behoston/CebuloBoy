@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import peewee
 
 db = peewee.SqliteDatabase('database.sqlite3')
@@ -10,7 +12,7 @@ class Shop(peewee.Model):
         database = db
 
     @classmethod
-    def get_id_by_name(cls, name: str) -> int:
+    def get_by_name(cls, name: str) -> int:
         return cls.get(Shop.name == name)
 
     def __str__(self):
@@ -24,9 +26,10 @@ class Promotion(peewee.Model):
     new_price = peewee.FloatField()
     url = peewee.CharField()
     code = peewee.CharField(null=True)
+    timestamp = peewee.DateTimeField(default=datetime.now, index=True)
 
     def __init__(self, *args, **kwargs):
-        if isinstance(kwargs['shop'], str):
+        if 'shop' in kwargs and isinstance(kwargs['shop'], str):
             kwargs['shop'] = Shop.get(name=kwargs['shop'])
         super().__init__(*args, **kwargs)
 
@@ -49,6 +52,16 @@ class Promotion(peewee.Model):
             url=self.url,
             code=self.code,
         )
+
+    @classmethod
+    def get_last(cls, shop: str):
+        return cls.select().join(
+            Shop
+        ).where(
+            Shop.name == shop
+        ).order_by(
+            Promotion.timestamp.desc()
+        ).first()
 
 
 if __name__ == '__main__':

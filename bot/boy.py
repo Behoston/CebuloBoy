@@ -1,11 +1,17 @@
 import argparse
+import datetime
+import logging
+import time
 from pprint import pprint
 
 import telepot
 
 import config
+import models
 from bot import message
 from bot import scrapers
+
+logger = logging.getLogger(__name__)
 
 
 def send_message(message: str):
@@ -24,6 +30,25 @@ scrapers_map = {
     'morele': scrapers.morele,
 }
 
+
+def wait_for_promotion(shop_name: str) -> models.Promotion or None:
+    scrape = scrapers_map[args.action]
+    start = datetime.datetime.now()
+    timeout = datetime.timedelta(minutes=5)
+    wait_time = datetime.timedelta(seconds=5)
+    while start + timeout > datetime.datetime.now():
+        promotion = scrape()
+        if promotion and promotion.product_name != models.Promotion.get_last(shop_name).product_name:
+            return promotion
+        else:
+            logging.warning("Promotion in {shop} not found. Waiting {wait}s...".format(
+                shop=shop_name,
+                wait=wait_time.total_seconds()),
+            )
+            time.sleep(wait_time.total_seconds())
+            wait_time *= 2
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Cebulo Boy main script')
     parser.add_argument(
@@ -33,9 +58,12 @@ if __name__ == '__main__':
     if args.action == 'update':
         get_update()
     elif args.action in scrapers_map:
-        promotion = scrapers_map[args.action]()
-        promotion.save()
-        _message = message.generate(promotion)
-        send_message(_message)
+        promotion = wait_for_promotion(args.action)
+        if promotion:
+            promotion.save()
+            _message = message.generate(promotion)
+            send_message(_message)
+        else:
+            logger.error("No promotion found for {}.".format(args.action))
     else:
         raise Exception
