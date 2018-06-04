@@ -1,5 +1,5 @@
-0 10 * * * root python3 /root/cebulobot/boy.py xkom
-0 22 * * * root python3 /root/cebulobot/boy.py xkom
-0 9 * * * root python3 /root/cebulobot/boy.py alto
-0 21 * * * root python3 /root/cebulobot/boy.py alto
-0 * * * * root python3 /root/cebulobot/boy.py morele
+0 10 * * * root python3 /root/cebulobot/bot/boy.py xkom
+0 22 * * * root python3 /root/cebulobot/bot/boy.py xkom
+0 9 * * * root python3 /root/cebulobot/bot/boy.py alto
+0 21 * * * root python3 /root/cebulobot/bot/boy.py alto
+0 * * * * root python3 /root/cebulobot/bot/boy.py morele
