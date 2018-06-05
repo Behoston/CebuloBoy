@@ -2,7 +2,9 @@ from datetime import datetime
 
 import peewee
 
-db = peewee.SqliteDatabase('database.sqlite3')
+from config import DB_FILE
+
+db = peewee.SqliteDatabase(DB_FILE)
 
 
 class Shop(peewee.Model):
