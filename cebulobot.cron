@@ -1,3 +1,6 @@
+SHELL=/bin/bash
+PYTHONPATH="${PYTHONPATH}:/root/cebulobot/"
+
 0 10 * * * root python3 /root/cebulobot/bot/boy.py xkom
 0 22 * * * root python3 /root/cebulobot/bot/boy.py xkom
 0 9 * * * root python3 /root/cebulobot/bot/boy.py alto
