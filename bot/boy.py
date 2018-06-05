@@ -38,7 +38,8 @@ def wait_for_promotion(shop_name: str) -> models.Promotion or None:
     wait_time = datetime.timedelta(seconds=5)
     while start + timeout > datetime.datetime.now():
         promotion = scrape()
-        if promotion and promotion.product_name != models.Promotion.get_last(shop_name).product_name:
+        last_promotion = models.Promotion.get_last(shop_name)
+        if not last_promotion or (promotion and last_promotion.product_name != promotion.product_name):
             return promotion
         else:
             logging.warning("Promotion in {shop} not found. Waiting {wait}s...".format(
