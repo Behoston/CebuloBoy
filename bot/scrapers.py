@@ -65,7 +65,10 @@ def morele() -> models.Promotion or None:
     new_price = _price_parser(new_price)
     code = promo.xpath('.//div[@class="product-code"]')[0].text.strip()
     match = re.search(r'użyj kodu:? (.*)', code)
-    code = match.group(1)
+    if match:
+        code = match.group(1)
+    else:
+        code = None
     return models.Promotion(
         shop='morele',
         product_name=product_name,
