@@ -29,8 +29,8 @@ scrapers_map = {
     'alto': scrapers.alto,
     'morele': scrapers.morele,
     'hard-pc': scrapers.hard_pc,
-    'komputronik_1': partial(scrapers.komputronik, 1),
-    'komputronik_2': partial(scrapers.komputronik, 2),
+    'komputronik_1': partial(scrapers.komputronik, 0),
+    'komputronik_2': partial(scrapers.komputronik, 1),
 }
 
 
