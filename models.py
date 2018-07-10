@@ -65,6 +65,16 @@ class Promotion(peewee.Model):
             Promotion.timestamp.desc()
         ).first()
 
+    @classmethod
+    def get_last_x(cls, shop: str, x: int):
+        return cls.select().join(
+            Shop
+        ).where(
+            Shop.name == shop
+        ).order_by(
+            Promotion.timestamp.desc()
+        ).limit(x)
+
 
 if __name__ == '__main__':
     db.connect()

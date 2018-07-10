@@ -3,7 +3,7 @@ import datetime
 import logging
 import time
 from pprint import pprint
-from functools import partial
+
 import telepot
 
 import config
@@ -29,12 +29,11 @@ scrapers_map = {
     'alto': scrapers.alto,
     'morele': scrapers.morele,
     'hard-pc': scrapers.hard_pc,
-    'komputronik_1': partial(scrapers.komputronik, 0),
-    'komputronik_2': partial(scrapers.komputronik, 1),
+    'komputronik': scrapers.komputronik,
 }
 
 
-def wait_for_promotion(shop_name: str) -> models.Promotion or None:
+def wait_for_promotions(shop_name: str) -> [models.Promotion]:
     scrape = scrapers_map[args.action]
     start = datetime.datetime.now()
     timeout = datetime.timedelta(minutes=5)
@@ -42,8 +41,21 @@ def wait_for_promotion(shop_name: str) -> models.Promotion or None:
     while start + timeout > datetime.datetime.now():
         promotion = scrape()
         last_promotion = models.Promotion.get_last(shop_name)
+        if isinstance(promotion, list):
+            promotions = promotion
+            i = len(promotions)
+            last_promotions_names = {
+                last_promotion.product_name
+                for last_promotion
+                in models.Promotion.get_last_x(shop_name, i)
+            }
+            result = []
+            for promotion in promotions:
+                if promotion.product_name not in last_promotions_names:
+                    result.append(promotion)
+            return result
         if not last_promotion or (promotion and last_promotion.product_name != promotion.product_name):
-            return promotion
+            return [promotion]
         else:
             logging.warning("Promotion in {shop} not found. Waiting {wait}s...".format(
                 shop=shop_name,
@@ -51,6 +63,7 @@ def wait_for_promotion(shop_name: str) -> models.Promotion or None:
             )
             time.sleep(wait_time.total_seconds())
             wait_time *= 2
+            return []
 
 
 if __name__ == '__main__':
@@ -62,12 +75,12 @@ if __name__ == '__main__':
     if args.action == 'update':
         get_update()
     elif args.action in scrapers_map:
-        promotion = wait_for_promotion(args.action)
-        if promotion:
+        promotions = wait_for_promotions(args.action)
+        for promotion in promotions:
             promotion.save()
             _message = message.generate(promotion)
             send_message(_message)
-        else:
+        if not promotions:
             logger.error("No promotion found for {}.".format(args.action))
     else:
         raise Exception

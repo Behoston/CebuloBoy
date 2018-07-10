@@ -101,17 +101,18 @@ def hard_pc() -> models.Promotion or None:
     )
 
 
-def komputronik(i: int) -> models.Promotion or None:
+def komputronik() -> [models.Promotion]:
     response = requests.get('https://www.komputronik.pl/frontend-api/product/box/occasions')
     promotions = response.json()
-    promotion = promotions['products'][i]
-    return models.Promotion(
-        shop='komputronik',
-        product_name=promotion['name'],
-        old_price=_price_parser(promotion['prices']['price_base_gross']),
-        new_price=_price_parser(promotion['prices']['price_gross']),
-        url=promotion['url'],
-    )
+    return [
+        models.Promotion(
+            shop='komputronik',
+            product_name=promotion['name'],
+            old_price=_price_parser(promotion['prices']['price_base_gross']),
+            new_price=_price_parser(promotion['prices']['price_gross']),
+            url=promotion['url'],
+        ) for promotion in promotions['products']
+    ]
 
 
 if __name__ == '__main__':

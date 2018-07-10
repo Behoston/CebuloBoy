@@ -7,5 +7,4 @@ PYTHONPATH="${PYTHONPATH}:/root/cebulobot/"
 0 21 * * * root python3 /root/cebulobot/bot/boy.py alto
 0 * * * * root python3 /root/cebulobot/bot/boy.py morele
 0 * * * * root python3 /root/cebulobot/bot/boy.py hard-pc
-0 * * * * root python3 /root/cebulobot/bot/boy.py komputronik_1
-0 * * * * root python3 /root/cebulobot/bot/boy.py komputronik_2
+0 * * * * root python3 /root/cebulobot/bot/boy.py komputronik
