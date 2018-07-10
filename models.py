@@ -20,6 +20,17 @@ class Shop(peewee.Model):
     def __str__(self):
         return 'Shop({name})'.format(name=self.name)
 
+    @property
+    def last_promotions(self):
+        return Promotion.select(
+        ).where(
+            Promotion.shop == self
+        ).order_by(
+            Promotion.timestamp.desc()
+        ).limit(
+            5
+        )
+
 
 class Promotion(peewee.Model):
     shop = peewee.ForeignKeyField(Shop)

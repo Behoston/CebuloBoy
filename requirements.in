@@ -3,3 +3,4 @@ lxml
 requests
 sanic
 peewee
+sanic-jinja2
