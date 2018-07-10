@@ -4,6 +4,7 @@ Bot służy do pobierania ofert ze sklepów:
  - [al.to](https://al.to)
  - [x-kom](https://x-kom.pl)
  - [morele](https://morele.net)
+ - [hard-pc](https://sklep.hard-pc.pl)
 
 i wysyłaniu powiadomień na [Telegrama](https://telegram.org/).
 
