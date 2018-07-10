@@ -5,7 +5,6 @@ import lxml.html
 import requests
 
 import models
-from bot.message import generate
 
 
 def xkom() -> models.Promotion:
@@ -102,5 +101,22 @@ def hard_pc() -> models.Promotion or None:
     )
 
 
+def komputronik(i: int) -> models.Promotion or None:
+    response = requests.get('https://www.komputronik.pl/frontend-api/product/box/occasions')
+    promotions = response.json()
+    promotion = promotions['products'][i]
+    return models.Promotion(
+        shop='komputronik',
+        product_name=promotion['name'],
+        old_price=_price_parser(promotion['prices']['price_base_gross']),
+        new_price=_price_parser(promotion['prices']['price_gross']),
+        url=promotion['url'],
+    )
+
+
 if __name__ == '__main__':
-    print(generate(hard_pc()))
+    from bot.message import generate
+    from functools import partial
+
+    k = partial(komputronik, 1)
+    print(generate(k()))

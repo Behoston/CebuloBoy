@@ -3,7 +3,7 @@ import datetime
 import logging
 import time
 from pprint import pprint
-
+from functools import partial
 import telepot
 
 import config
@@ -29,6 +29,8 @@ scrapers_map = {
     'alto': scrapers.alto,
     'morele': scrapers.morele,
     'hard-pc': scrapers.hard_pc,
+    'komputronik_1': partial(scrapers.komputronik, 1),
+    'komputronik_2': partial(scrapers.komputronik, 2),
 }
 
 
