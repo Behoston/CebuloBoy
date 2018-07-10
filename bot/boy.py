@@ -28,6 +28,7 @@ scrapers_map = {
     'xkom': scrapers.xkom,
     'alto': scrapers.alto,
     'morele': scrapers.morele,
+    'hard-pc': scrapers.hard_pc,
 }
 
 

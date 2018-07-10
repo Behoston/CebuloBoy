@@ -73,4 +73,5 @@ if __name__ == '__main__':
         {'name': 'xkom'},
         {'name': 'alto'},
         {'name': 'morele'},
+        {'name': 'hard-pc'},
     ]).on_conflict_ignore().execute()
