@@ -1,4 +1,5 @@
 import json
+import random
 import re
 
 import lxml.html
@@ -118,9 +119,56 @@ def komputronik() -> [models.Promotion]:
     ]
 
 
+def get_random_user_agent():
+    user_agents = [
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+        (
+            'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/67.0.3396.99 Safari/537.36'
+        ),
+        (
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/67.0.3396.87 Safari/537.36 OPR/54.0.2952.54'
+        ),
+        'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0',
+        (
+            'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/67.0.3396.87 Safari/537.36 OPR/54.0.2952.51'
+        ),
+    ]
+    return random.choice(user_agents)
+
+
+def proline() -> models.Promotion or None:
+    response = requests.get(
+        url='https://proline.pl/',
+        headers={
+            'User-Agent': get_random_user_agent(),
+        }
+    )
+    tree = lxml.html.fromstring(response.text)
+    promo = tree.xpath('//div[@id="headshot"]')
+    if not promo:
+        return
+    else:
+        promo = promo[0]
+    product_link = promo.xpath('.//h2/a')[0]
+    product_name = product_link.text.strip()
+    product_url = 'https://proline.pl' + product_link.get('href').split('?')[0]
+    old_price = promo.xpath('.//*[@class="cena_old"]/b')[0].text.strip()
+    old_price = _price_parser(old_price)
+    new_price = promo.xpath('.//*[@class="cena_new"]/b')[0].text.strip()
+    new_price = _price_parser(new_price)
+    return models.Promotion(
+        shop='proline',
+        product_name=product_name,
+        old_price=old_price,
+        new_price=new_price,
+        url=product_url,
+    )
+
+
 if __name__ == '__main__':
     from bot.message import generate
-    from functools import partial
 
-    k = partial(komputronik, 1)
-    print(generate(k()))
+    print(generate(proline()))

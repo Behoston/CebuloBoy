@@ -30,6 +30,7 @@ scrapers_map = {
     'morele': scrapers.morele,
     'hard-pc': scrapers.hard_pc,
     'komputronik': scrapers.komputronik,
+    'proline': scrapers.proline,
 }
 
 

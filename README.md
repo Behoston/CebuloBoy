@@ -6,6 +6,7 @@ Bot służy do pobierania ofert ze sklepów:
  - [morele](https://morele.net)
  - [hard-pc](https://sklep.hard-pc.pl)
  - [komputronik](https://www.komputronik.pl/)
+ - [proline](https://proline.pl/)
 
 i wysyłaniu powiadomień na [Telegrama](https://telegram.org/).
 
