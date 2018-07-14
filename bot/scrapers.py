@@ -40,8 +40,8 @@ def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
 
 
 def _price_parser(price: str) -> float:
-    match = re.search(r'(?P<zlotowki>[\d ]+)(,(?P<grosze>\d+))?', price)
-    zlotowki = re.sub(r' ', '', match.group('zlotowki'))
+    match = re.search(r'(?P<zlotowki>[\d\s]+)((,\.)(?P<grosze>\d+))?', price)
+    zlotowki = re.sub(r'\s', '', match.group('zlotowki'))
     zlotowki = int(zlotowki)
     grosze = match.group('grosze')
     grosze = int(grosze) if grosze else 0
