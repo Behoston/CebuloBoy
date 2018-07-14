@@ -1,11 +1,11 @@
 SHELL=/bin/bash
 PYTHONPATH="${PYTHONPATH}:/root/cebulobot/"
 
-0 10 * * * root python3 /root/cebulobot/bot/boy.py xkom
-0 22 * * * root python3 /root/cebulobot/bot/boy.py xkom
-0 9 * * * root python3 /root/cebulobot/bot/boy.py alto
-0 21 * * * root python3 /root/cebulobot/bot/boy.py alto
-0 * * * * root python3 /root/cebulobot/bot/boy.py morele
-0 * * * * root python3 /root/cebulobot/bot/boy.py hard-pc
-0 * * * * root python3 /root/cebulobot/bot/boy.py komputronik
-0 * * * * root python3 /root/cebulobot/bot/boy.py proline
+0 10 * * * root python3 /root/cebulobot/bot/boy.py xkom >> /var/log/cebulobot.log 2>&1
+0 22 * * * root python3 /root/cebulobot/bot/boy.py xkom >> /var/log/cebulobot.log 2>&1
+0 9 * * * root python3 /root/cebulobot/bot/boy.py alto >> /var/log/cebulobot.log 2>&1
+0 21 * * * root python3 /root/cebulobot/bot/boy.py alto >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py morele >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py hard-pc >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py komputronik >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py proline >> /var/log/cebulobot.log 2>&1
