@@ -64,7 +64,7 @@ def wait_for_promotions(shop_name: str) -> [models.Promotion]:
             )
             time.sleep(wait_time.total_seconds())
             wait_time *= 2
-            return []
+    return []
 
 
 if __name__ == '__main__':
