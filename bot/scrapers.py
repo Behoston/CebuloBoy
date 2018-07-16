@@ -152,7 +152,10 @@ def proline() -> models.Promotion or None:
         return
     else:
         promo = promo[0]
-    product_link = promo.xpath('.//h2/a')[0]
+    try:
+        product_link = promo.xpath('.//h2/a')[0]
+    except IndexError:
+        return None
     product_name = product_link.text.strip()
     product_url = 'https://proline.pl' + product_link.get('href').split('?')[0]
     old_price = promo.xpath('.//*[@class="cena_old"]/b')[0].text.strip()
