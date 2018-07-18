@@ -6,6 +6,7 @@
 #
 atomicwrites==1.1.5       # via pytest
 attrs==18.1.0             # via pytest
+flake8-isort==2.5
 flake8==3.5.0
 isort==4.3.4
 mccabe==0.6.1             # via flake8
@@ -16,3 +17,4 @@ pycodestyle==2.3.1        # via flake8
 pyflakes==1.6.0           # via flake8
 pytest==3.6.3
 six==1.11.0               # via more-itertools, pytest
+testfixtures==6.2.0       # via flake8-isort

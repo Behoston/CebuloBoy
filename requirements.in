@@ -1,4 +1,4 @@
-telepot
+telepot==12.6
 lxml
 requests
 sanic

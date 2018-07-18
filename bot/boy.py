@@ -59,7 +59,7 @@ def wait_for_promotions(shop_name: str) -> [models.Promotion]:
         if not last_promotion or (promotion and last_promotion.product_name != promotion.product_name):
             return [promotion]
         else:
-            logging.warning(f"Promotion in {shop_name} not found. Waiting {wait_time.total_seconds()}s...")
+            logging.warning("Promotion in {} not found. Waiting {}s...".format(shop_name, wait_time.total_seconds()))
             time.sleep(wait_time.total_seconds())
             wait_time *= 2
     return []
@@ -74,13 +74,13 @@ if __name__ == '__main__':
     if args.action == 'update':
         get_update()
     elif args.action in scrapers_map:
-        logger.info(f"Looking for a promotion(s) in '{args.action}'.")
+        logger.info("Looking for a promotion(s) in '{}'.".format(args.action))
         promotions = wait_for_promotions(args.action)
         for promotion in promotions:
             promotion.save()
             _message = message.generate(promotion)
             send_message(_message)
         if not promotions:
-            logger.error(f"No promotion found for '{args.action}'.")
+            logger.error("No promotion found for '{}'.".format(args.action))
     else:
         raise Exception
