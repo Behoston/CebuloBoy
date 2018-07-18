@@ -11,8 +11,12 @@ import models
 from bot import message
 from bot import scrapers
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
+logging.basicConfig(
+    level=logging.INFO,
+    style='{',
+    format='[{asctime}]{levelname}:CEBULOBOT:{message}',
+)
 
 
 def send_message(message: str):
