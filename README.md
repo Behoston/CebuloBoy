@@ -1,5 +1,7 @@
 # Cebulo Boy - bot
 
+[![CircleCI](https://circleci.com/gh/Behoston/CebuloBoy.svg?style=svg)](https://circleci.com/gh/Behoston/CebuloBoy)
+
 Bot służy do pobierania ofert ze sklepów:
  - [al.to](https://al.to)
  - [x-kom](https://x-kom.pl)
