@@ -40,12 +40,13 @@ scrapers_map = {
 
 
 def wait_for_promotions(shop_name: str) -> [models.Promotion]:
-    scrape = scrapers_map[args.action]
+    scrape_fn = scrapers_map[shop_name]
     start = datetime.datetime.now()
-    timeout = datetime.timedelta(minutes=5)
-    wait_time = datetime.timedelta(seconds=5)
+    # TODO: enable timeouts when async
+    timeout = datetime.timedelta(seconds=5)
+    wait_time = datetime.timedelta(seconds=0)
     while start + timeout > datetime.datetime.now():
-        promotion = scrape()
+        promotion = scrape_fn()
         last_promotion = models.Promotion.get_last(shop_name)
         if isinstance(promotion, list):
             promotions = promotion
@@ -69,22 +70,43 @@ def wait_for_promotions(shop_name: str) -> [models.Promotion]:
     return []
 
 
+time_schedule = {
+    'komputronik': {1},
+    'alto': {9, 21},
+    'xkom': {10, 22},
+    'proline': set(range(25)),
+    'hard-pc': set(range(25)),
+    'morele': set(range(25)),
+}
+
+
+def schedule_scraping():
+    actual_hour = datetime.datetime.now().hour
+    for shop, promotion_hours in time_schedule.items():
+        if actual_hour in promotion_hours:
+            scrape(shop)
+
+
+def scrape(shop: str):
+    logger.info("Looking for a promotion(s) in '{}'.".format(shop))
+    promotions = wait_for_promotions(shop)
+    for promotion in promotions:
+        promotion.save()
+        _message = message.generate(promotion)
+        send_message(_message)
+    if not promotions:
+        logger.error("No promotion found for '{}'.".format(shop))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Cebulo Boy main script')
     parser.add_argument(
-        'action', type=str, choices={shop for shop in scrapers_map.keys()}.union({'update'}),
-        help='service to scrape or print update to check `chat_id`')
+        '--show-updates',
+        action='store_true',
+        help='prints updates to check `chat_id`',
+    )
     args = parser.parse_args()
-    if args.action == 'update':
+    if args.show_updates:
         get_update()
-    elif args.action in scrapers_map:
-        logger.info("Looking for a promotion(s) in '{}'.".format(args.action))
-        promotions = wait_for_promotions(args.action)
-        for promotion in promotions:
-            promotion.save()
-            _message = message.generate(promotion)
-            send_message(_message)
-        if not promotions:
-            logger.error("No promotion found for '{}'.".format(args.action))
     else:
-        raise Exception
+        schedule_scraping()
