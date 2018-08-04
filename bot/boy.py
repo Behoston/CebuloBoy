@@ -11,6 +11,8 @@ import models
 from bot import message
 from bot import scrapers
 
+PROMOTION_PADDING = 5
+
 logger = logging.getLogger()
 logging.basicConfig(
     level=logging.INFO,
@@ -50,7 +52,7 @@ def wait_for_promotions(shop_name: str) -> [models.Promotion]:
         last_promotion = models.Promotion.get_last(shop_name)
         if isinstance(promotion, list):
             promotions = promotion
-            i = len(promotions)
+            i = PROMOTION_PADDING + len(promotions)
             last_promotions_names = {
                 last_promotion.product_name
                 for last_promotion
