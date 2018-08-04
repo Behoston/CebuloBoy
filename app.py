@@ -1,30 +1,40 @@
+import yaml
 from sanic import Sanic
-from sanic_jinja2 import SanicJinja2
+from sanic.response import json
 
 import models
 
 app = Sanic()
 
-jinja = SanicJinja2(app)
-app.static('/static', './static')
+
+@app.route('/doc')
+async def doc(request):
+    with open('api.yml') as f:
+        return json(yaml.load(f))
 
 
-#
-# Specify the package name, if templates/ dir is inside module
-# jinja = SanicJinja2(app, pkg_name='sanicapp')
-# or use customized templates path
-# jinja = SanicJinja2(app, pkg_name='sanicapp', pkg_path='other/templates')
-# or setup later
-# jinja = SanicJinja2()
-# jinja.init_app(app)
-
-
-@app.route('/')
-@jinja.template('index.html')
-async def index(request):
+@app.route('/last_promotions')
+async def last_promotions(request):
     shops = models.Shop.select()
+    response = []
+    for shop in shops:
+        response.append({
+            'name': shop.name,
+            'last_promotions': [
+                serialize_promotion(promotion)
+                for promotion in shop.last_promotions(6)
+            ]
+        })
+    return json(response)
+
+
+def serialize_promotion(promotion: models.Promotion) -> dict:
     return {
-        'shops': shops,
+        'product_name': promotion.product_name,
+        'old_price': promotion.old_price,
+        'new_price': promotion.new_price,
+        'url': promotion.url,
+        'code': promotion.code,
     }
 
 

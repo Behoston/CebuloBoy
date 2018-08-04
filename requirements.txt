@@ -12,13 +12,11 @@ chardet==3.0.4            # via aiohttp, requests
 httptools==0.0.11         # via sanic
 idna-ssl==1.1.0           # via aiohttp
 idna==2.7                 # via idna-ssl, requests, yarl
-jinja2==2.10              # via sanic-jinja2
 lxml==4.2.3
-markupsafe==1.0           # via jinja2
 multidict==4.3.1          # via aiohttp, yarl
 peewee==3.6.4
+pyyaml==3.13
 requests==2.19.1
-sanic-jinja2==0.7.0
 sanic==0.7.0
 telepot==12.6
 ujson==1.35               # via sanic
