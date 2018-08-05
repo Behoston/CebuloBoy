@@ -22,6 +22,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Shop'
+  /rss:
+    get:
+      summary: RSS feed
+      operationId: getRssFeed
+      responses:
+        200:
+          description: Generated feed
+
 components:
   schemas:
     Shop:

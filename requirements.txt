@@ -9,15 +9,18 @@ aiohttp==2.3.10           # via telepot
 async-timeout==2.0.1      # via aiohttp
 certifi==2018.4.16        # via requests
 chardet==3.0.4            # via aiohttp, requests
+feedgen==0.7.0
 httptools==0.0.11         # via sanic
 idna-ssl==1.1.0           # via aiohttp
 idna==2.7                 # via idna-ssl, requests, yarl
 lxml==4.2.3
 multidict==4.3.1          # via aiohttp, yarl
 peewee==3.6.4
+python-dateutil==2.7.3    # via feedgen
 pyyaml==3.13
 requests==2.19.1
 sanic==0.7.0
+six==1.11.0               # via python-dateutil
 telepot==12.6
 ujson==1.35               # via sanic
 urllib3==1.23             # via requests, telepot
