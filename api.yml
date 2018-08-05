@@ -13,6 +13,8 @@ paths:
     get:
       summary: A list of most recent promotions in all shops
       operationId: getLastPromotions
+      parameters:
+      - $ref: '#/components/parameters/limit'
       responses:
         '200':
           description: Shop entry with most recent promotions.
@@ -26,11 +28,21 @@ paths:
     get:
       summary: RSS feed
       operationId: getRssFeed
+      parameters:
+      - $ref: '#/components/parameters/limit'
       responses:
         200:
           description: Generated feed
 
 components:
+  parameters:
+    limit:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        maximum: 20
+        minimum: 0
   schemas:
     Shop:
       type: object
