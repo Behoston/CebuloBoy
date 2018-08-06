@@ -42,6 +42,7 @@ def serialize_promotion(promotion: models.Promotion) -> dict:
         'new_price': promotion.new_price,
         'url': promotion.url,
         'code': promotion.code,
+        'timestamp': promotion.timestamp,
     }
 
 

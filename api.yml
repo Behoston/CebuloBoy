@@ -72,3 +72,6 @@ components:
         code:
           type: string
           nullable: true
+        timestamp:
+          type: number
+          format: long
