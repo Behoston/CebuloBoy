@@ -1,0 +1,32 @@
+@media only screen and (max-width: 320px) {
+    body {
+        font-size: 1em;
+    }
+}
+
+.classes-shop-root {
+    background-color: grey;
+}
+
+.classes-shop-root:first-child {
+    background-color: red;
+}
+
+.promotionImg {
+    padding-top: 10px;
+    max-width: 100%;
+    max-height: 50%;
+    width: auto;
+    height: 50px;
+}
+
+.promotionMedia {
+    max-width: 100%;
+    max-height: 50%;
+    height: 100px;
+    width: auto;
+}
+
+.promotionCard {
+    /* min-height: 350px; */
+}
