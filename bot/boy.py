@@ -78,10 +78,10 @@ time_schedule = {
     'komputronik': {1},
     'alto': {9, 21},
     'xkom': {10, 22},
-    'proline': set(range(25)),
-    'hard-pc': set(range(25)),
-    'morele': set(range(25)),
-    'wlodipol': set(range(25)),
+    'proline': set(range(24)),
+    'hard-pc': set(range(24)),
+    'morele': set(range(24)),
+    'wlodipol': set(range(24)),
 }
 
 
