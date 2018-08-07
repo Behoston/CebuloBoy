@@ -86,4 +86,5 @@ if __name__ == '__main__':
         {'name': 'hard-pc'},
         {'name': 'komputronik'},
         {'name': 'proline'},
+        {'name': 'wlodipol'},
     ]).on_conflict_ignore().execute()

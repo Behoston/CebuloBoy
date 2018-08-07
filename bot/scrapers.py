@@ -171,7 +171,31 @@ def proline() -> models.Promotion or None:
     )
 
 
+def wlodipol() -> models.Promotion or None:
+    response = requests.get('https://wlodipol.pl')
+    tree = lxml.html.fromstring(response.text)
+    promo = tree.xpath('//div[contains(@class, "hotdeal-box")]//div[@class="product-info"]')
+    if not promo:
+        return
+    else:
+        promo = promo[0]
+    product_link = promo.xpath('.//a[@class="product-name"]')[0]
+    product_name = product_link.text.strip()
+    product_url = product_link.get('href')
+    old_price = promo.xpath('.//span[contains(@class, "price old")]')[0].text
+    new_price = promo.xpath('.//span[contains(@class, "price new")]')[0].text
+    old_price = _price_parser(old_price)
+    new_price = _price_parser(new_price)
+    return models.Promotion(
+        shop='proline',
+        product_name=product_name,
+        old_price=old_price,
+        new_price=new_price,
+        url=product_url,
+    )
+
+
 if __name__ == '__main__':
     from bot.message import generate
 
-    print(generate(proline()))
+    print(generate(wlodipol()))
