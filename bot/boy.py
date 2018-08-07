@@ -38,6 +38,7 @@ scrapers_map = {
     'hard-pc': scrapers.hard_pc,
     'komputronik': scrapers.komputronik,
     'proline': scrapers.proline,
+    'wlodipol': scrapers.wlodipol,
 }
 
 
@@ -80,6 +81,7 @@ time_schedule = {
     'proline': set(range(25)),
     'hard-pc': set(range(25)),
     'morele': set(range(25)),
+    'wlodipol': set(range(25)),
 }
 
 
