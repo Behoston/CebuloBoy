@@ -187,7 +187,7 @@ def wlodipol() -> models.Promotion or None:
     old_price = _price_parser(old_price)
     new_price = _price_parser(new_price)
     return models.Promotion(
-        shop='proline',
+        shop='wlodipol',
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
