@@ -28,6 +28,12 @@ def float_fucker(i: float) -> str:
 
 def generate(promotion: models.Promotion) -> str:
     code = 'Użyj kodu: `{}`\n'.format(promotion.code) if promotion.code else ''
+    if promotion.end_date:
+        date = promotion.end_date.strftime('%d-%m-%Y')
+        time = promotion.end_date.strftime('%H:%M:%S')
+        end_date = '\nPromocja trwa do {} dnia {}'.format(time, date)
+    else:
+        end_date = ''
     discount = promotion.old_price - promotion.new_price
     return (
         '{greetings}!\n'
@@ -36,6 +42,7 @@ def generate(promotion: models.Promotion) -> str:
         '*Taniej o {discount} zł ({discount_percents}%)*\n'
         '{code}'
         '[Link do promocji]({url})'
+        '{end_date}'
     ).format(
         greetings=random.choice(greetings),
         product_name=promotion.product_name,
@@ -45,4 +52,5 @@ def generate(promotion: models.Promotion) -> str:
         discount_percents=float_fucker((discount / promotion.old_price) * 100),
         code=code,
         url=promotion.url,
+        end_date=end_date,
     )

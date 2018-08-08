@@ -1,3 +1,4 @@
+import datetime
 import json
 import random
 import re
@@ -9,14 +10,24 @@ import models
 
 
 def xkom() -> models.Promotion:
-    return _xkom_alto('https://x-kom.pl', 'xkom')
+    return _xkom_alto(
+        base_url='https://x-kom.pl',
+        shop='xkom',
+        promo_end_morning=10,
+        promo_end_evening=22,
+    )
 
 
 def alto() -> models.Promotion:
-    return _xkom_alto('https://al.to', 'alto')
+    return _xkom_alto(
+        base_url='https://al.to',
+        shop='alto',
+        promo_end_morning=9,
+        promo_end_evening=21,
+    )
 
 
-def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
+def _xkom_alto(base_url: str, shop: str, promo_end_morning: int, promo_end_evening: int) -> models.Promotion:
     response = requests.get(base_url)
     tree = lxml.html.fromstring(response.text)
     hot_shot = tree.xpath('//div[@id="hotShot"]')[0]
@@ -30,12 +41,18 @@ def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
     hot_shot_script = hot_shot.xpath('following-sibling::script')[0].text
     match = re.search(r'window\.location ?= ?(?P<link>.*);', hot_shot_script)
     url = base_url + json.loads(match.group('link'))
+    end_date = datetime.datetime.now()
+    if end_date.hour < 12:
+        end_date = end_date.replace(hour=promo_end_evening, minute=0, second=0)
+    else:
+        end_date = end_date.replace(hour=promo_end_morning, minute=0, second=0) + datetime.timedelta(days=1)
     return models.Promotion(
         shop=shop,
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
         url=url,
+        end_date=end_date,
     )
 
 
@@ -70,6 +87,8 @@ def morele() -> models.Promotion or None:
         code = match.group(1)
     else:
         code = None
+    end_date = promo.xpath('.//div[@class="morele-countdown promotion-countdown"]')[0].get('data-date-to')
+    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')
     return models.Promotion(
         shop='morele',
         product_name=product_name,
@@ -77,6 +96,7 @@ def morele() -> models.Promotion or None:
         new_price=new_price,
         url=product_url,
         code=code,
+        end_date=end_date,
     )
 
 
@@ -96,12 +116,18 @@ def hard_pc() -> models.Promotion or None:
     old_price = _price_parser(old_price)
     new_price = price.xpath('.//span')[0].text.strip()
     new_price = _price_parser(new_price)
+    end_date = tree.xpath('//script[not(@src)]')[1].text
+    for line in end_date.split('\n'):
+        if line.strip().startswith('date'):
+            end_date = line.strip().split(': ')[-1].strip(',').strip('"')
+    end_date = datetime.datetime.strptime(end_date, '%d %B %Y %H:%M:%S')
     return models.Promotion(
         shop='hard-pc',
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
         url=product_url,
+        end_date=end_date,
     )
 
 
@@ -115,6 +141,7 @@ def komputronik() -> [models.Promotion]:
             old_price=_price_parser(promotion['prices']['price_base_gross']),
             new_price=_price_parser(promotion['prices']['price_gross']),
             url=promotion['url'],
+            end_date=datetime.datetime.strptime(promotion['date_to_end_promotion'], '%Y/%m/%d %H:%M:%S')
         ) for promotion in promotions['products']
     ]
 
@@ -162,12 +189,16 @@ def proline() -> models.Promotion or None:
     old_price = _price_parser(old_price)
     new_price = promo.xpath('.//*[@class="cena_new"]/b')[0].text.strip()
     new_price = _price_parser(new_price)
+    end_date = promo.xpath('./script')[0].text
+    year, month, day, hour, minute = re.findall('\d+', end_date)
+    end_date = datetime.datetime(year=int(year), month=int(month), day=int(day), hour=int(hour), minute=int(minute))
     return models.Promotion(
         shop='proline',
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
         url=product_url,
+        end_date=end_date,
     )
 
 
@@ -186,12 +217,15 @@ def wlodipol() -> models.Promotion or None:
     new_price = promo.xpath('.//span[contains(@class, "price new")]')[0].text
     old_price = _price_parser(old_price)
     new_price = _price_parser(new_price)
+    end_date = promo.xpath('//div[@class="countdown"]')[0].text.strip()
+    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')
     return models.Promotion(
         shop='wlodipol',
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
         url=product_url,
+        end_date=end_date,
     )
 
 

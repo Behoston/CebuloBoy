@@ -29,6 +29,8 @@ class Promotion(peewee.Model):
     url = peewee.CharField()
     code = peewee.CharField(null=True)
     timestamp = peewee.DateTimeField(default=datetime.now, index=True)
+    end_date = peewee.DateTimeField(null=True, index=True, default=None)
+    number_of_items = peewee.IntegerField(null=True, default=None)
 
     def __init__(self, *args, **kwargs):
         if 'shop' in kwargs and isinstance(kwargs['shop'], str):
@@ -46,13 +48,15 @@ class Promotion(peewee.Model):
             '{old_price}, '
             '{new_price}, '
             '{url}, '
-            '{code})').format(
+            '{code}'
+            '{number_of_items})').format(
             shop_name=self.shop,
             product_name=self.product_name,
             old_price=self.old_price,
             new_price=self.new_price,
             url=self.url,
             code=self.code,
+            number_of_items=self.number_of_items,
         )
 
     @classmethod
@@ -77,6 +81,8 @@ class Promotion(peewee.Model):
 
 
 if __name__ == '__main__':
+    from playhouse.migrate import SqliteMigrator, migrate
+
     db.connect()
     db.create_tables([Shop, Promotion])
     Shop.insert_many([
@@ -88,3 +94,13 @@ if __name__ == '__main__':
         {'name': 'proline'},
         {'name': 'wlodipol'},
     ]).on_conflict_ignore().execute()
+    migrator = SqliteMigrator(db)
+    # TODO: improve migrations!
+    try:
+        migrate(
+            migrator.add_column('promotion', 'end_date', peewee.DateTimeField(default=None, null=True)),
+            migrator.add_index('promotion', 'end_date'),
+            migrator.add_column('promotion', 'number_of_items', peewee.IntegerField(default=None, null=True)),
+        )
+    except peewee.OperationalError:
+        pass
