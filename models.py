@@ -30,7 +30,13 @@ class Promotion(peewee.Model):
     code = peewee.CharField(null=True)
     timestamp = peewee.DateTimeField(default=datetime.now, index=True)
     end_date = peewee.DateTimeField(null=True, index=True, default=None)
-    number_of_items = peewee.IntegerField(null=True, default=None)
+    items_available = peewee.IntegerField(null=True, default=None)
+    items_sold = peewee.IntegerField(null=True, default=None)
+
+    @property
+    def items_total(self) -> int:
+        if self.items_available:
+            return self.items_available + self.items_sold
 
     def __init__(self, *args, **kwargs):
         if 'shop' in kwargs and isinstance(kwargs['shop'], str):
@@ -96,11 +102,17 @@ if __name__ == '__main__':
     ]).on_conflict_ignore().execute()
     migrator = SqliteMigrator(db)
     # TODO: improve migrations!
-    try:
-        migrate(
-            migrator.add_column('promotion', 'end_date', peewee.DateTimeField(default=None, null=True)),
-            migrator.add_index('promotion', 'end_date'),
-            migrator.add_column('promotion', 'number_of_items', peewee.IntegerField(default=None, null=True)),
-        )
-    except peewee.OperationalError:
-        pass
+    migrations = [
+        # Add date when promotion ends and add number of items in promotion
+        migrator.add_column('promotion', 'end_date', peewee.DateTimeField(default=None, null=True)),
+        migrator.add_index('promotion', 'end_date'),
+        migrator.add_column('promotion', 'number_of_items', peewee.IntegerField(default=None, null=True)),
+        # Redesign items counts
+        migrator.rename_column('promotion', 'number_of_items', 'items_available'),
+        migrator.add_column('promotion', 'items_sold', peewee.IntegerField(default=None, null=True)),
+    ]
+    for migration in migrations:
+        try:
+            migrate(migration)
+        except peewee.OperationalError:
+            pass
