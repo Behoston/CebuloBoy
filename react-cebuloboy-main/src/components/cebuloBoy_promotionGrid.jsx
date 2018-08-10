@@ -1,33 +1,29 @@
 import React, { Component } from "react";
-import Promotion from "./promotion";
-import "./promotion.css";
+import Promotion from "./cebuloBoy_promotion";
+import "./cebuloBoy_promotion.css";
 import {
   Grid,
   Paper,
   Typography,
   Divider
 } from "../../node_modules/@material-ui/core";
-import LinkPreview from "react-native-link-preview";
 
 class PromotionGrid extends Component {
-  componentDidMount() {
-    // console.log(this.props.shop);
-    // const promotions = this.state.promotions.map((element, index) => {
-    //   console.log(element.last_promotions[0].url);
-    //   return LinkPreview.getPreview(element.last_promotions[0].url).then(
-    //     data => {
-    //       const gfx = data.images[data.images.length - 1];
-    //       return { ...element, gfx };
-    //     }
-    //   );
-    // });
-    // Promise.all(promotions).then(promotions => {
-    //   this.setState({ promotions });
-    //   // console.log(this.state);
-    // });
-    // console.log(this.props.promotions.last_promotions);
+  shopGfx() {
+    if (this.props.id === 0) {
+      return require("../gfx/xkom-logo.png");
+    } else if (this.props.id === 1) {
+      return require("../gfx/alto-logo.png");
+    } else if (this.props.id === 2) {
+      return require("../gfx/xkom-logo.png");
+    } else if (this.props.id === 3) {
+      return require("../gfx/xkom-logo.png");
+    } else if (this.props.id === 4) {
+      return require("../gfx/xkom-logo.png");
+    } else if (this.props.id === 5) {
+      return require("../gfx/xkom-logo.png");
+    }
   }
-
   render() {
     return (
       <div style={{ padding: 20 }}>
@@ -42,8 +38,8 @@ class PromotionGrid extends Component {
             <Paper style={{ marginBottom: 5 }}>
               <img
                 className="promotionImg"
-                src={this.props.promotions.shop_gfx}
-                alt=""
+                src={this.shopGfx()}
+                alt={this.props.promotions.name}
               />
             </Paper>
           </Typography>
@@ -58,7 +54,6 @@ class PromotionGrid extends Component {
                   id={"promotion_" + index}
                   key={"promotion_" + index}
                   promotions={promotions}
-                  widths={this.props.widths[index]}
                 />
               )
               // console.log(promotions, index)

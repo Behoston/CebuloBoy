@@ -20,6 +20,7 @@ class App extends Component {
                 height: "auto",
                 paddingRight: 10
               }}
+              alt="CebuloBoy"
             />
             <Typography variant="headline" color="inherit">
               {" "}

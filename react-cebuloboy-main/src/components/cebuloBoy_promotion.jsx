@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./promotion.css";
+import "./cebuloBoy_promotion.css";
 import {
   Grid,
   Card,
@@ -12,13 +12,18 @@ import {
 import LinkPreview from "react-native-link-preview";
 
 class Promotion extends Component {
-  componentDidMount() {
-    // console.log(this.props.promotions);
+  constructor() {
+    super();
+    this.state = {
+      gfx: ""
+    };
   }
-  getItemImg() {
-    const preview = LinkPreview.getPreview(this.props.promotions.url);
-    preview.then(result => {
-      return result.images[result.images.length - 1];
+
+  componentDidMount() {
+    return LinkPreview.getPreview(this.props.promotions.url).then(result => {
+      const resultGfx = result.images[result.images.length - 1];
+      console.log(resultGfx);
+      return this.setState({ gfx: resultGfx });
     });
   }
   fixDigits() {
@@ -49,16 +54,10 @@ class Promotion extends Component {
   wchichShop() {}
 
   render() {
-    const {
-      product_name,
-      old_price,
-      new_price,
-      url,
-      shop_gfx
-    } = this.props.promotions;
-    console.log(this.props.promotions);
+    const { product_name, old_price, new_price, url } = this.props.promotions;
+    // console.log(this.props.promotions);
     return (
-      <Grid xs={this.props.widths}>
+      <Grid xs={2}>
         <Card className="promotionCard">
           <Divider />
 
@@ -66,7 +65,7 @@ class Promotion extends Component {
             <img
               className="promotionMedia"
               title={product_name}
-              src={this.getItemImg()}
+              src={this.state.gfx}
               alt=""
             />
           </Typography>
