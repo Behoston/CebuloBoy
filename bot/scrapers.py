@@ -47,7 +47,7 @@ def _xkom_alto(base_url: str, shop: str, promo_end_morning: int, promo_end_eveni
     else:
         end_date = end_date.replace(hour=promo_end_morning, minute=0, second=0) + datetime.timedelta(days=1)
     try:
-        left, sold = [int(i.text) for i in hot_shot.xpath('.//*[contains(@class,"count")]//strong')]
+        left, sold = ([int(i.text) for i in hot_shot.xpath('.//*[contains(@class,"count")]//strong')] + [0])[:2]
     except Exception as e:
         print(e)
         left, sold = None, None
@@ -248,4 +248,4 @@ def wlodipol() -> models.Promotion or None:
 if __name__ == '__main__':
     from bot.message import generate
 
-    print(generate(proline()))
+    print(generate(alto()))
