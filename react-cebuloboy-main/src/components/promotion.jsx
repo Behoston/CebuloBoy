@@ -77,7 +77,8 @@ class Promotion extends Component {
               Cena <s>{old_price}</s> zł -> {new_price}
             </Typography>
             <Typography component="p">
-              Taniej o {this.fixDigits()} zł ({this.getPercent()}%)
+              Taniej o {this.fixDigits()} zł ({this.getPercent()}
+              %)
             </Typography>
             <Typography component="p">{this.promoCode()}</Typography>
             <CardActions>
