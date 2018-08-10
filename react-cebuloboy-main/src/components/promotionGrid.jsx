@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Promotion from "./promotion";
 import "./promotion.css";
-
 import {
   Grid,
   Paper,
