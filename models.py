@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import peewee
+from peewee import fn
 
 from config import DB_FILE
 
@@ -84,6 +85,13 @@ class Promotion(peewee.Model):
         ).order_by(
             Promotion.timestamp.desc()
         ).limit(x)
+
+    @classmethod
+    def saved_money_per_shop(cls):
+        return cls.select(
+            cls.shop,
+            (fn.SUM(cls.old_price) - fn.SUM(cls.new_price)).alias('saved_money'),
+        ).group_by(cls.shop_id)
 
 
 if __name__ == '__main__':

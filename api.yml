@@ -33,6 +33,34 @@ paths:
       responses:
         200:
           description: Generated feed
+  /saved_money:
+    get:
+      summary: Saved money info
+      operationId: getSavedMoney
+      responses:
+        '200':
+          description: Saved money report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: number
+                    format: foat
+                  shops:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          format: integer
+                        name:
+                          type: string
+                        saved_money:
+                          type: number
+                          format: float
 
 components:
   parameters:
@@ -47,6 +75,9 @@ components:
     Shop:
       type: object
       properties:
+        id:
+          type: number
+          format: integer
         name:
           type: string
         last_promotions:

@@ -26,6 +26,7 @@ async def last_promotions(request):
     limit = min(int(request.args.get('limit', DEFAULT_PROMOTION_LIMIT)), MAX_PROMOTION_LIMIT)
     for shop in shops:
         response.append({
+            'id': shop.id,
             'name': shop.name,
             'last_promotions': [
                 serialize_promotion(promotion)
@@ -82,6 +83,22 @@ async def rss(request):
                 code=code,
             ))
     return HTTPResponse(fg.rss_str().decode('utf-8'), content_type='application/rss+xml')
+
+
+@app.route('/saved_money')
+async def saved_money(request):
+    response = {
+        'total': 0,
+        'shops': [],
+    }
+    for report in models.Promotion.saved_money_per_shop():
+        response['shops'].append({
+            'id': report.shop.id,
+            'name': report.shop.name,
+            'saved_money': report.saved_money,
+        })
+        response['total'] += report.saved_money
+    return json(response)
 
 
 if __name__ == '__main__':
