@@ -56,7 +56,6 @@ class PromotionGrid extends Component {
                   promotions={promotions}
                 />
               )
-              // console.log(promotions, index)
             )}
           </Grid>
         </Paper>

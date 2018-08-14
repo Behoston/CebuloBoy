@@ -32,6 +32,7 @@ class App extends Component {
               aria-haspopup="true"
               color="inherit"
               target="_blank"
+
             >
               <RssFeed />
             </IconButton>
