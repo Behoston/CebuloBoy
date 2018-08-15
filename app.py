@@ -37,7 +37,7 @@ async def last_promotions(request):
 
 
 def serialize_promotion(promotion: models.Promotion) -> dict:
-    return {
+    serialized = {
         'product_name': promotion.product_name,
         'old_price': promotion.old_price,
         'new_price': promotion.new_price,
@@ -45,6 +45,12 @@ def serialize_promotion(promotion: models.Promotion) -> dict:
         'code': promotion.code,
         'timestamp': promotion.timestamp,
     }
+    if promotion.items_total is not None and promotion.items_available is not None:
+        serialized['quantites'] = {
+            'total': promotion.items_total,
+            'left': promotion.items_available,
+        }
+    return serialized
 
 
 @app.route('/rss')
