@@ -5,14 +5,19 @@ import CountUp from "react-countup";
 
 class CebuloBoy extends Component {
   state = {
-    money: 15423,
+    money: { total: 0 },
     promotions: []
   };
   componentDidMount() {
-    fetch("https://cors.io/?https://propaniusz.tk/test.json?format=json")
+    fetch("/last_promotions")
       .then(res => res.json())
       .then(result => {
         this.setState({ promotions: result.promotion });
+      });
+    fetch("/saved_money")
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ money: result.promotion });
       });
   }
   render() {
@@ -25,8 +30,9 @@ class CebuloBoy extends Component {
               start={0}
               prefix="Ile udało nam się zaoszczędzić: "
               suffix=" zł"
-              end={this.state.money}
+              end={this.state.money.total}
               duration={30}
+              redraw={true}
             />
           </Typography>
         </Paper>
