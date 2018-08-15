@@ -38,6 +38,7 @@ scrapers_map = {
     'hard-pc': scrapers.hard_pc,
     'komputronik': scrapers.komputronik,
     'proline': scrapers.proline,
+    'wlodipol': scrapers.wlodipol,
 }
 
 
@@ -49,9 +50,15 @@ def wait_for_promotions(shop_name: str) -> [models.Promotion]:
     wait_time = datetime.timedelta(seconds=0)
     while start + timeout > datetime.datetime.now():
         promotion = scrape_fn()
-        last_promotion = models.Promotion.get_last(shop_name)
-        if isinstance(promotion, list):
-            promotions = promotion
+        if not promotion:
+            logging.warning("Promotion in {} not found. Waiting {}s...".format(shop_name, wait_time.total_seconds()))
+            time.sleep(wait_time.total_seconds())
+            wait_time *= 2
+        else:
+            if not isinstance(promotion, list):
+                promotions = [promotion]
+            else:
+                promotions = promotion
             i = PROMOTION_PADDING + len(promotions)
             last_promotions_names = {
                 last_promotion.product_name
@@ -63,12 +70,7 @@ def wait_for_promotions(shop_name: str) -> [models.Promotion]:
                 if promotion.product_name not in last_promotions_names:
                     result.append(promotion)
             return result
-        if not last_promotion or (promotion and last_promotion.product_name != promotion.product_name):
-            return [promotion]
-        else:
-            logging.warning("Promotion in {} not found. Waiting {}s...".format(shop_name, wait_time.total_seconds()))
-            time.sleep(wait_time.total_seconds())
-            wait_time *= 2
+
     return []
 
 
@@ -76,9 +78,10 @@ time_schedule = {
     'komputronik': {1},
     'alto': {9, 21},
     'xkom': {10, 22},
-    'proline': set(range(25)),
-    'hard-pc': set(range(25)),
-    'morele': set(range(25)),
+    'proline': set(range(24)),
+    'hard-pc': set(range(24)),
+    'morele': set(range(24)),
+    'wlodipol': set(range(24)),
 }
 
 
