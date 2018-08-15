@@ -33,6 +33,8 @@ paths:
       responses:
         200:
           description: Generated feed
+          content:
+            application/rss+xml: {}
   /saved_money:
     get:
       summary: Saved money info
@@ -56,11 +58,14 @@ paths:
                         id:
                           type: number
                           format: integer
+                          example: 2
                         name:
                           type: string
+                          example: morele.net
                         saved_money:
                           type: number
                           format: float
+                          example: 999.88
 
 components:
   parameters:
