@@ -78,8 +78,10 @@ components:
         id:
           type: number
           format: integer
+          example: 2
         name:
           type: string
+          example: 'morele.net'
         last_promotions:
           type: array
           items:
@@ -89,20 +91,39 @@ components:
       properties:
         product_name:
           type: string
+          example: 'Podkładka Natec PODKŁADKA POD MYSZ BIUROWA NATEC TIME ZONE MAP MAXI (NPO-1119)'
         old_price:
           type: number
           format: float
           minimum: 0
+          example: 40.99
         new_price:
           type: number
           format: float
           minimum: 0
+          example: 29.90
         url:
           type: string
           format: url
+          example: 'https://www.morele.net/podkladka-natec-podkladka-pod-mysz-biurowa-natec-time-zone-map-maxi-npo-1119-1700046/'
         code:
           type: string
           nullable: true
+          example: 'NATEC2000'
         timestamp:
           type: number
           format: long
+          example: 1534349725
+        quantity:
+          type: object
+          properties:
+            total:
+              type: number
+              format: integer
+              example: 20
+              minimum: 0
+            left:
+              type: number
+              format: integer
+              example: 12
+              minimum: 0
