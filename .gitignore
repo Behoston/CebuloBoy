@@ -1,4 +1,4 @@
-config.py
+local_config.py
 database.sqlite3
 *.pyc
 __pycache__/

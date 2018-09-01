@@ -19,6 +19,8 @@ peewee==3.6.4
 python-dateutil==2.7.3    # via feedgen
 pyyaml==3.13
 requests==2.19.1
+sanic-cors==0.9.4
+sanic-plugins-framework==0.6.3.dev20180717  # via sanic-cors
 sanic==0.7.0
 six==1.11.0               # via python-dateutil
 telepot==12.6

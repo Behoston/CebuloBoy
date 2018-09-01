@@ -3,11 +3,13 @@ from feedgen.feed import FeedGenerator
 from sanic import Sanic
 from sanic.response import HTTPResponse
 from sanic.response import json
+from sanic_cors import CORS
 
 import models
 from bot.message import float_fucker
 
 app = Sanic()
+CORS(app, automatic_options=True)
 
 DEFAULT_PROMOTION_LIMIT = 5
 MAX_PROMOTION_LIMIT = 20

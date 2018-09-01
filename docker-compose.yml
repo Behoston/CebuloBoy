@@ -1,0 +1,12 @@
+version: '3'
+services:
+  backend:
+    build: .
+    ports:
+      - 1337:1337
+    volumes:
+      - ./database.sqlite3:/database.sqlite3
+    environment:
+      DB_FILE: /database.sqlite3
+      TELEGRAM_TOKEN: $TELEGRAM_TOKEN
+      TELEGRAM_CHANNEL_ID: $TELEGRAM_CHANNEL_ID
