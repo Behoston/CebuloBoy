@@ -31,6 +31,8 @@ class App extends Component {
               style={{ position: "absolute", right: 0 }}
               aria-haspopup="true"
               color="inherit"
+              target="_blank"
+
             >
               <RssFeed />
             </IconButton>
@@ -48,6 +50,7 @@ class App extends Component {
               style={{ position: "absolute", right: 100 }}
               aria-haspopup="true"
               color="inherit"
+              target="_blank"
             >
               <CodeBraces />
             </IconButton>
@@ -56,6 +59,7 @@ class App extends Component {
               style={{ position: "absolute", right: 150 }}
               aria-haspopup="true"
               color="inherit"
+              target="_blank"
             >
               <Telegram />
             </IconButton>

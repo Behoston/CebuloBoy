@@ -10,18 +10,18 @@ import {
 
 class PromotionGrid extends Component {
   shopGfx() {
-    if (this.props.id === 0) {
+    if (this.props.promotions.name === "xkom") {
       return require("../gfx/xkom-logo.png");
-    } else if (this.props.id === 1) {
+    } else if (this.props.promotions.name === "alto") {
       return require("../gfx/alto-logo.png");
-    } else if (this.props.id === 2) {
-      return require("../gfx/xkom-logo.png");
-    } else if (this.props.id === 3) {
-      return require("../gfx/xkom-logo.png");
-    } else if (this.props.id === 4) {
-      return require("../gfx/xkom-logo.png");
-    } else if (this.props.id === 5) {
-      return require("../gfx/xkom-logo.png");
+    } else if (this.props.promotions.name === "morele") {
+      return require("../gfx/morele-logo.png");
+    } else if (this.props.promotions.name === "hard-pc") {
+      return require("../gfx/hardpc-logo.png");
+    } else if (this.props.promotions.name === "komputronik") {
+      return require("../gfx/komputronik-logo.png");
+    } else if (this.props.promotions.name === "proline") {
+      return require("../gfx/proline-logo.png");
     }
   }
   render() {
@@ -56,7 +56,6 @@ class PromotionGrid extends Component {
                   promotions={promotions}
                 />
               )
-              // console.log(promotions, index)
             )}
           </Grid>
         </Paper>

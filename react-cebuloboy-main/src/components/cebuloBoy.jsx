@@ -1,18 +1,23 @@
 import React, { Component } from "react";
 import { Typography, Paper } from "../../node_modules/@material-ui/core";
 import PromotionGrid from "./cebuloBoy_promotionGrid";
-import CountTo from "react-count-to";
+import CountUp from "react-countup";
 
 class CebuloBoy extends Component {
   state = {
-    money: 21312421421,
+    money: { total: 0 },
     promotions: []
   };
   componentDidMount() {
-    fetch("http://projekty.propanek.tk/test/test.json")
+    fetch("/last_promotions")
       .then(res => res.json())
       .then(result => {
         this.setState({ promotions: result.promotion });
+      });
+    fetch("/saved_money")
+      .then(res => res.json())
+      .then(result => {
+        this.setState({ money: result.promotion });
       });
   }
   render() {
@@ -20,8 +25,15 @@ class CebuloBoy extends Component {
       <React.Fragment>
         <Paper square={true}>
           <Typography align="center">
-            Ile udało nam się zaoszczędzić:{" "}
-            <CountTo to={this.state.money} speed={1000000000} delay={1} /> zł
+            <CountUp
+              delay={5}
+              start={0}
+              prefix="Ile udało nam się zaoszczędzić: "
+              suffix=" zł"
+              end={this.state.money.total}
+              duration={30}
+              redraw={true}
+            />
           </Typography>
         </Paper>
         {this.state.promotions.map((promotions, index) => (
