@@ -41,7 +41,6 @@ jobs:
           name: run tests
           command: |
             export PYTHONPATH=${PYTHONPATH}:~/repo/cebulobot/bot
-            cp sample_config.py config.py
             . venv/bin/activate
             pytest
 

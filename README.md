@@ -45,11 +45,7 @@ do katalogu `/etc/cron.d/`.
 
 #### Telegram API
 
-Trzeba skopiować sobie plik konfuguracyjny:
-```bash
-cp sample_config.py config.py
-```
-i uzupełnić jego zawartość.
+Należy uzupełnić plik [config.py](./config.py) lub podać zmienne środowiskowe.
 
 W kodzie trzeba uzupełnić `token` do API Telegrama.
 Można go uzyskać od [BotFathera](https://telegram.me/BotFather).

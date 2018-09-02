@@ -6,18 +6,18 @@ import CountUp from "react-countup";
 class CebuloBoy extends Component {
   state = {
     money: { total: 0 },
-    promotions: []
+    promotions: [],
   };
   componentDidMount() {
-    fetch("/last_promotions")
+    fetch("http://gruzometr.pl:1337/last_promotions")
       .then(res => res.json())
       .then(result => {
-        this.setState({ promotions: result.promotion });
+        this.setState({ promotions: result });
       });
-    fetch("/saved_money")
+    fetch("http://gruzometr.pl:1337/saved_money")
       .then(res => res.json())
       .then(result => {
-        this.setState({ money: result.promotion });
+        this.setState({ money: result  });
       });
   }
   render() {
