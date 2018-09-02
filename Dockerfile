@@ -14,4 +14,4 @@ RUN apk --update add --no-cache --virtual build-dependencies \
 COPY requirements.txt /code/requirements.txt
 RUN pip install -r requirements.txt
 COPY . /code
-CMD ["python", "models.py", "&&", "python", "app.py"]
+CMD python models.py && python app.py
