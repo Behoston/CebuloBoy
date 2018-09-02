@@ -41,6 +41,8 @@ jobs:
           name: run tests
           command: |
             export PYTHONPATH=${PYTHONPATH}:~/repo/cebulobot/bot
+            export TELEGRAM_CHANNEL_ID=not_relevant
+            export TELEGRAM_TOKEN=not_relevant
             . venv/bin/activate
             pytest
 
