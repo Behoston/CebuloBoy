@@ -89,7 +89,10 @@ def schedule_scraping():
     actual_hour = datetime.datetime.now().hour
     for shop, promotion_hours in time_schedule.items():
         if actual_hour in promotion_hours:
-            scrape(shop)
+            try:
+                scrape(shop)
+            except Exception as e:
+                logger.error(e)
 
 
 def scrape(shop: str):
