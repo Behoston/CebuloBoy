@@ -32,7 +32,7 @@ def generate(promotion: models.Promotion) -> str:
     time = promotion.end_date.strftime('%H:%M:%S')
     end_date = '\nPromocja trwa do {} dnia {}'.format(time, date)
     if promotion.items_available:
-        number_of_items = '\nZostało sztuk: {}/{}'.format(promotion.items_available, promotion.items_total)
+        number_of_items = '\nSztuk w promocji: {}'.format(promotion.items_total)
     else:
         number_of_items = ''
     discount = promotion.old_price - promotion.new_price
