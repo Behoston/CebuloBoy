@@ -75,30 +75,30 @@ def _price_parser(price: str) -> float:
 def morele() -> models.Promotion or None:
     response = requests.get('https://www.morele.net/')
     tree = lxml.html.fromstring(response.text)
-    promo = tree.xpath('//div[@class="promotion-product"]')
+    promo = tree.xpath('//div[@class="home-sections-promotion"]')
     if not promo:
         return
     else:
         promo = promo[0]
-    product_link = promo.xpath('.//div[@class="product-name"]/a')[0]
+    product_link = promo.xpath('.//div[@class="promo-box-name"]/a')[0]
     product_name = product_link.text.strip()
     product_url = product_link.get('href')
-    price = promo.xpath('.//div[@class="product-price"]')[0]
-    old_price = price.xpath('.//div[contains(@class, "old")]/span')[0].text.strip()
+    price = promo.xpath('.//div[@class="promo-box-price"]')[0]
+    old_price = price.xpath('.//div[contains(@class, "old")]')[0].text.strip()
     old_price = _price_parser(old_price)
-    new_price = price.xpath('.//div[contains(@class, "new")]/span')[0].text.strip()
+    new_price = price.xpath('.//div[contains(@class, "new")]')[0].text.strip()
     new_price = _price_parser(new_price)
-    code = promo.xpath('.//div[@class="product-code"]')[0].text.strip()
-    match = re.search(r'użyj kodu:? (.*)', code)
-    if match:
-        code = match.group(1)
+    code = promo.xpath('.//div[@class="promo-box-code"]/div[@class="promo-box-code-value"]')
+    if code:
+        code = code[0].text.strip()
     else:
         code = None
-    end_date = promo.xpath('.//div[@class="morele-countdown promotion-countdown"]')[0].get('data-date-to')
+    end_date = promo.xpath('.//div[@class="promo-box-countdown"]')[0].get('data-date-to')
     end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')
-    count = promo.xpath('.//div[@class="product-availability-info"]')[0]
-    sold = int(count.xpath('.//div[@class="orders"]//div[contains(@class, "number")]')[0].text)
-    left = int(count.xpath('.//div[@class="quantity"]//div[contains(@class, "number")]')[0].text)
+    sold = promo.xpath('.//div[@class="status-box-expired"]')[0].text
+    sold = int(re.findall('\d+', sold)[0])
+    left = promo.xpath('.//div[@class="status-box-was"]')[0].text
+    left = int(re.findall('\d+', left)[0])
     return models.Promotion(
         shop='morele',
         product_name=product_name,
@@ -248,4 +248,4 @@ def wlodipol() -> models.Promotion or None:
 if __name__ == '__main__':
     from bot.message import generate
 
-    print(generate(alto()))
+    print(generate(morele()))
