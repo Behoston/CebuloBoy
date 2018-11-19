@@ -79,7 +79,7 @@ time_schedule = {
     'alto': {9, 21},
     'xkom': {10, 22},
     'proline': set(range(24)),
-    'hard-pc': set(range(24)),
+    # 'hard-pc': set(range(24)),
     'morele': set(range(24)),
     'wlodipol': set(range(24)),
 }
