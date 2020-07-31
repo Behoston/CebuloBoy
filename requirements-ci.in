@@ -2,3 +2,4 @@ pytest
 flake8
 isort
 flake8-isort
+-r requirements.txt

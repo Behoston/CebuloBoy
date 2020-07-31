@@ -30,27 +30,18 @@ def alto() -> models.Promotion:
 def _xkom_alto(base_url: str, shop: str, promo_end_morning: int, promo_end_evening: int) -> models.Promotion:
     response = requests.get(base_url)
     tree = lxml.html.fromstring(response.text)
-    hot_shot = tree.xpath('//div[@id="hotShot"]')[0]
-
-    old_price = hot_shot.xpath('.//div[@class="old-price"]')[0].text
-    old_price = _price_parser(old_price)
-    new_price = hot_shot.xpath('.//div[@class="new-price"]')[0].text
-    new_price = _price_parser(new_price)
-    product_name = hot_shot.xpath('.//p[@class="product-name"]')[0].text
-
-    hot_shot_script = hot_shot.xpath('following-sibling::script')[0].text
-    match = re.search(r'window\.location ?= ?(?P<link>.*);', hot_shot_script)
-    url = base_url + json.loads(match.group('link'))
-    end_date = datetime.datetime.now()
-    if end_date.hour < 12:
-        end_date = end_date.replace(hour=promo_end_evening, minute=0, second=0)
-    else:
-        end_date = end_date.replace(hour=promo_end_morning, minute=0, second=0) + datetime.timedelta(days=1)
-    try:
-        left, sold = ([int(i.text) for i in hot_shot.xpath('.//*[contains(@class,"count")]//strong')] + [0])[:2]
-    except Exception as e:
-        print(e)
-        left, sold = None, None
+    script_data = tree.xpath('//*[@id="pageWrapper"]//script[not(@type) and contains(text(), "hotShot")]')[0].text
+    match = re.search(r"window.__INITIAL_STATE__\['app'\]\s+=\s+(?P<data>.*);", script_data)
+    data = json.loads(match.group('data'))
+    hot_shot_data = data['productsLists']['hotShot'][0]['extend']
+    old_price = hot_shot_data['oldPrice']
+    new_price = hot_shot_data['price']
+    product_name = hot_shot_data['promotionName']
+    promo_id = hot_shot_data['id']
+    url = f'{base_url}/goracy_strzal/{promo_id}'
+    end_date = datetime.datetime.fromisoformat(hot_shot_data['promotionEnd'].replace('Z', '+00:00')).astimezone()
+    sold = hot_shot_data['saleCount']
+    left = hot_shot_data['promotionTotalCount'] - sold
     return models.Promotion(
         shop=shop,
         product_name=product_name,

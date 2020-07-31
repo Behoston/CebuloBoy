@@ -26,6 +26,12 @@ def send_message(message: str):
     bot.sendMessage(config.TELEGRAM_CHANNEL_ID, message, parse_mode='markdown')
 
 
+def send_error(error):
+    if config.TELEGRAM_ERROR_ID is not None:
+        bot = telepot.Bot(config.TELEGRAM_TOKEN)
+        bot.sendMessage(config.TELEGRAM_ERROR_ID, str(error))
+
+
 def get_update():
     bot = telepot.Bot(config.TELEGRAM_TOKEN)
     pprint(bot.getUpdates())
@@ -93,6 +99,7 @@ def schedule_scraping():
                 scrape(shop)
             except Exception as e:
                 logger.error(e)
+                send_error(e)
 
 
 def scrape(shop: str):
@@ -103,7 +110,9 @@ def scrape(shop: str):
         _message = message.generate(promotion)
         send_message(_message)
     if not promotions:
-        logger.error("No promotion found for '{}'.".format(shop))
+        error_message = "No promotion found for '{}'.".format(shop)
+        logger.error(error_message)
+        send_error(error_message)
 
 
 if __name__ == '__main__':
