@@ -1,19 +1,15 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/python:3.5-stretch
+      - image: circleci/python:3.8
     working_directory: ~/repo
     steps:
       - checkout
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-{{ checksum "requirements-ci.txt" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
@@ -23,13 +19,14 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
+            pip install --upgrade pip
             pip install -r requirements.txt
             pip install -r requirements-ci.txt
 
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          key: v1-dependencies-{{ checksum "requirements-ci.txt" }}
 
       - run:
           name: run static analisis

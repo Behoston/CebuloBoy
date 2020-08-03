@@ -87,9 +87,9 @@ def morele() -> models.Promotion or None:
     end_date = promo.xpath('.//div[@class="promo-box-countdown"]')[0].get('data-date-to')
     end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')
     sold = promo.xpath('.//div[@class="status-box-expired"]')[0].text
-    sold = int(re.findall('\d+', sold)[0])
+    sold = int(re.findall(r'\d+', sold)[0])
     left = promo.xpath('.//div[@class="status-box-was"]')[0].text
-    left = int(re.findall('\d+', left)[0])
+    left = int(re.findall(r'\d+', left)[0])
     return models.Promotion(
         shop='morele',
         product_name=product_name,
@@ -178,7 +178,7 @@ def proline() -> models.Promotion or None:
     tree = lxml.html.fromstring(response.text)
     promo = tree.xpath('//div[@id="headshot"]')
     if not promo:
-        return
+        return None
     else:
         promo = promo[0]
     try:
@@ -192,7 +192,7 @@ def proline() -> models.Promotion or None:
     new_price = promo.xpath('.//*[@class="cena_new"]/b')[0].text.strip()
     new_price = _price_parser(new_price)
     end_date = promo.xpath('./script')[0].text
-    year, month, day, hour, minute = re.findall('\d+', end_date)
+    year, month, day, hour, minute = re.findall(r'\d+', end_date)
     end_date = datetime.datetime(year=int(year), month=int(month), day=int(day), hour=int(hour), minute=int(minute))
     response = session.get('https://proline.pl/headshot-ilosc.php')
     tree = lxml.html.fromstring(response.text)
