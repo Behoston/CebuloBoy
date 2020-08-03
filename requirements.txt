@@ -4,31 +4,17 @@
 #
 #    pip-compile
 #
-aiofiles==0.5.0           # via sanic
 aiohttp==3.6.2            # via telepot
 async-timeout==3.0.1      # via aiohttp
 attrs==19.3.0             # via aiohttp
-certifi==2020.6.20        # via httpx, requests
-chardet==3.0.4            # via aiohttp, httpx, requests
-h11==0.9.0                # via httpx
-h2==3.2.0                 # via httpx
-hpack==3.0.0              # via h2
-hstspreload==2020.7.29    # via httpx
-httptools==0.1.1          # via sanic
-httpx==0.11.1             # via sanic
-hyperframe==5.2.0         # via h2
-idna==2.10                # via httpx, requests, yarl
+certifi==2020.6.20        # via requests
+chardet==3.0.4            # via aiohttp, requests
+idna==2.10                # via requests, yarl
 lxml==4.5.2               # via -r requirements.in
-multidict==4.7.6          # via aiohttp, sanic, yarl
+multidict==4.7.6          # via aiohttp, yarl
 peewee==3.13.3            # via -r requirements.in
 requests==2.24.0          # via -r requirements.in
-rfc3986==1.4.0            # via httpx
-sanic==20.6.3             # via -r requirements.in
-sniffio==1.1.0            # via httpx
 telepot==12.6             # via -r requirements.in
 typing-extensions==3.7.4.2  # via yarl
-ujson==3.0.0              # via sanic
-urllib3==1.25.10          # via httpx, requests, telepot
-uvloop==0.14.0            # via sanic
-websockets==8.1           # via sanic
-yarl==1.5.0               # via aiohttp
+urllib3==1.25.10          # via requests, telepot
+yarl==1.5.1               # via aiohttp
