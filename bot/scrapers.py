@@ -108,7 +108,7 @@ def hard_pc() -> models.Promotion or None:
     tree = lxml.html.fromstring(response.text)
     promo = tree.xpath('//div[contains(@class, "hot-deal")]//div[@class="item-info"]')
     if not promo:
-        return
+        return None
     else:
         promo = promo[0]
     product_link = promo.xpath('.//a')[0]
@@ -119,18 +119,13 @@ def hard_pc() -> models.Promotion or None:
     old_price = _price_parser(old_price)
     new_price = price.xpath('.//span')[0].text.strip()
     new_price = _price_parser(new_price)
-    end_date = tree.xpath('//script[not(@src)]')[1].text
-    for line in end_date.split('\n'):
-        if line.strip().startswith('date'):
-            end_date = line.strip().split(': ')[-1].strip(',').strip('"')
-    end_date = datetime.datetime.strptime(end_date, '%d %B %Y %H:%M:%S')
     return models.Promotion(
         shop='hard-pc',
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
         url=product_url,
-        end_date=end_date,
+        end_date=None,
     )
 
 
@@ -209,29 +204,33 @@ def proline() -> models.Promotion or None:
     )
 
 
-def wlodipol() -> models.Promotion or None:
-    response = requests.get('https://wlodipol.pl')
+def zadowolenie():
+    response = requests.get('https://www.zadowolenie.pl/')
     tree = lxml.html.fromstring(response.text)
-    promo = tree.xpath('//div[contains(@class, "hotdeal-box")]//div[@class="product-info"]')
-    if not promo:
-        return
-    else:
-        promo = promo[0]
-    product_link = promo.xpath('.//a[@class="product-name"]')[0]
-    product_name = product_link.text.strip()
-    product_url = product_link.get('href')
-    old_price = promo.xpath('.//span[contains(@class, "price old")]')[0].text
-    new_price = promo.xpath('.//span[contains(@class, "price new")]')[0].text
+    promo = tree.xpath('//div[contains(@class, "dayOffer") and contains(@class, "product_box_widget")]')[0]
+    product_name = promo.xpath('.//a[contains(@class, "product-name")]')[0].text.strip()
+    old_price = promo.xpath('.//span[contains(@class, "OldPrice")]')[0].text
     old_price = _price_parser(old_price)
+    new_price = promo.xpath('.//*[contains(@class, "price_new")]/span')[0].text
     new_price = _price_parser(new_price)
-    end_date = promo.xpath('//div[@class="countdown"]')[0].text.strip()
-    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')
+    url = promo.xpath('.//a')[0].get('href')
+    counter = promo.xpath('.//*[contains(@class, "js-counter")]')[0]
+    end_time = counter.get('data-end-time')
+    end_time = datetime.time.fromisoformat(end_time)
+    end_date = datetime.datetime.now()
+    if end_time < end_date.time():
+        end_date += datetime.timedelta(days=1)
+    end_date = end_date.replace(
+        hour=end_time.hour,
+        minute=end_time.minute,
+        second=end_time.second,
+    )
     return models.Promotion(
-        shop='wlodipol',
+        shop='zadowolenie',
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
-        url=product_url,
+        url=url,
         end_date=end_date,
     )
 
@@ -239,4 +238,4 @@ def wlodipol() -> models.Promotion or None:
 if __name__ == '__main__':
     from bot.message import generate
 
-    print(generate(morele()))
+    print(generate(zadowolenie()))

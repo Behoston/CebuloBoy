@@ -1,7 +1,9 @@
 import argparse
 import datetime
 import logging
+import os
 import time
+import typing
 from pprint import pprint
 
 import telepot
@@ -11,7 +13,7 @@ import models
 from bot import message
 from bot import scrapers
 
-PROMOTION_PADDING = 5
+PROMOTION_PADDING = int(os.getenv('PROMOTION_PADDING', '5'))
 
 logger = logging.getLogger()
 logging.basicConfig(
@@ -44,18 +46,35 @@ scrapers_map = {
     'hard-pc': scrapers.hard_pc,
     'komputronik': scrapers.komputronik,
     'proline': scrapers.proline,
-    'wlodipol': scrapers.wlodipol,
+    'zadowolenie': scrapers.zadowolenie,
 }
 
 
-def wait_for_promotions(shop_name: str) -> [models.Promotion]:
+def scrape(shop: str):
+    logger.info("Looking for a promotion(s) in '{}'.".format(shop))
+    promotions = wait_for_promotions(shop)
+    for promotion in promotions:
+        promotion.save()
+        _message = message.generate(promotion)
+        send_message(_message)
+    if not promotions:
+        error_message = "No promotion found for '{}'.".format(shop)
+        logger.error(error_message)
+
+
+def wait_for_promotions(shop_name: str) -> typing.List[models.Promotion]:
     scrape_fn = scrapers_map[shop_name]
     start = datetime.datetime.now()
-    # TODO: enable timeouts when async
-    timeout = datetime.timedelta(seconds=5)
-    wait_time = datetime.timedelta(seconds=0)
+    timeout = datetime.timedelta(minutes=10)
+    wait_time = datetime.timedelta(seconds=1)
     while start + timeout > datetime.datetime.now():
-        promotion = scrape_fn()
+        try:
+            promotion = scrape_fn()
+        except Exception as e:
+            error_message = f"Scrape failed for shop {shop_name}! {e}"
+            logger.error(error_message)
+            send_error(error_message)
+            promotion = None
         if not promotion:
             logging.warning("Promotion in {} not found. Waiting {}s...".format(shop_name, wait_time.total_seconds()))
             time.sleep(wait_time.total_seconds())
@@ -80,43 +99,14 @@ def wait_for_promotions(shop_name: str) -> [models.Promotion]:
     return []
 
 
-time_schedule = {
-    'komputronik': {1},
-    'alto': {9, 21},
-    'xkom': {10, 22},
-    'proline': set(range(24)),
-    # 'hard-pc': set(range(24)),
-    'morele': set(range(24)),
-    'wlodipol': set(range(24)),
-}
-
-
-def schedule_scraping():
-    actual_hour = datetime.datetime.now().hour
-    for shop, promotion_hours in time_schedule.items():
-        if actual_hour in promotion_hours:
-            try:
-                scrape(shop)
-            except Exception as e:
-                logger.error(e)
-                send_error(e)
-
-
-def scrape(shop: str):
-    logger.info("Looking for a promotion(s) in '{}'.".format(shop))
-    promotions = wait_for_promotions(shop)
-    for promotion in promotions:
-        promotion.save()
-        _message = message.generate(promotion)
-        send_message(_message)
-    if not promotions:
-        error_message = "No promotion found for '{}'.".format(shop)
-        logger.error(error_message)
-        send_error(error_message)
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Cebulo Boy main script')
+    parser.add_argument(
+        '--shop',
+        type=str,
+        choices=scrapers_map.keys(),
+        help="Shop sto scrape promotion.",
+    )
     parser.add_argument(
         '--show-updates',
         action='store_true',
@@ -125,5 +115,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.show_updates:
         get_update()
+    elif args.shop:
+        scrape(args.shop)
     else:
-        schedule_scraping()
+        raise Exception("--shop or --show-updates required!")

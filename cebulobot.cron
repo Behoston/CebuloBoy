@@ -1,4 +1,10 @@
 SHELL=/bin/bash
 PYTHONPATH="${PYTHONPATH}:/root/cebulobot/"
 
-0 * * * * root python3 /root/cebulobot/bot/boy.py >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop xkom >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop alto >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop morele >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop hard-pc >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop komputronik >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop proline >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop zadowolenie >> /var/log/cebulobot.log 2>&1

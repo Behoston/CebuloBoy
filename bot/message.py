@@ -28,9 +28,12 @@ def float_fucker(i: float) -> str:
 
 def generate(promotion: models.Promotion) -> str:
     code = 'Użyj kodu: `{}`\n'.format(promotion.code) if promotion.code else ''
-    date = promotion.end_date.strftime('%d-%m-%Y')
-    time = promotion.end_date.strftime('%H:%M:%S')
-    end_date = '\nPromocja trwa do {} dnia {}'.format(time, date)
+    if promotion.end_date is not None:
+        date = promotion.end_date.strftime('%d-%m-%Y')
+        time = promotion.end_date.strftime('%H:%M:%S')
+        end_date = '\nPromocja trwa do {} dnia {}'.format(time, date)
+    else:
+        end_date = ''
     if promotion.items_available:
         number_of_items = '\nSztuk w promocji: {}'.format(promotion.items_total)
     else:

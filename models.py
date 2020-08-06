@@ -99,6 +99,7 @@ if __name__ == '__main__':
         {'name': 'komputronik'},
         {'name': 'proline'},
         {'name': 'wlodipol'},
+        {'name': 'zadowolenie'},
     ]).on_conflict_ignore().execute()
     migrator = SqliteMigrator(db)
     # TODO: improve migrations!
