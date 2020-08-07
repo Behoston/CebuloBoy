@@ -59,14 +59,14 @@ def scrape(shop: str):
         send_message(_message)
     if not promotions:
         error_message = "No promotion found for '{}'.".format(shop)
-        logger.error(error_message)
+        logger.info(error_message)
 
 
 def wait_for_promotions(shop_name: str) -> typing.List[models.Promotion]:
     scrape_fn = scrapers_map[shop_name]
     start = datetime.datetime.now()
-    timeout = datetime.timedelta(minutes=10)
-    wait_time = datetime.timedelta(seconds=1)
+    timeout = datetime.timedelta(minutes=5)
+    wait_time = datetime.timedelta(seconds=5)
     while start + timeout > datetime.datetime.now():
         try:
             promotion = scrape_fn()
@@ -75,11 +75,7 @@ def wait_for_promotions(shop_name: str) -> typing.List[models.Promotion]:
             logger.error(error_message)
             send_error(error_message)
             promotion = None
-        if not promotion:
-            logging.warning("Promotion in {} not found. Waiting {}s...".format(shop_name, wait_time.total_seconds()))
-            time.sleep(wait_time.total_seconds())
-            wait_time *= 2
-        else:
+        if promotion:
             if not isinstance(promotion, list):
                 promotions = [promotion]
             else:
@@ -94,8 +90,11 @@ def wait_for_promotions(shop_name: str) -> typing.List[models.Promotion]:
             for promotion in promotions:
                 if promotion.product_name not in last_promotions_names:
                     result.append(promotion)
-            return result
-
+            if result:
+                return result
+        logging.warning("Promotion in {} not found. Waiting {}s...".format(shop_name, wait_time.total_seconds()))
+        time.sleep(wait_time.total_seconds())
+        wait_time *= 2
     return []
 
 

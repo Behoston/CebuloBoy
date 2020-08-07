@@ -13,8 +13,6 @@ def xkom() -> models.Promotion:
     return _xkom_alto(
         base_url='https://x-kom.pl',
         shop='xkom',
-        promo_end_morning=10,
-        promo_end_evening=22,
     )
 
 
@@ -22,12 +20,10 @@ def alto() -> models.Promotion:
     return _xkom_alto(
         base_url='https://al.to',
         shop='alto',
-        promo_end_morning=9,
-        promo_end_evening=21,
     )
 
 
-def _xkom_alto(base_url: str, shop: str, promo_end_morning: int, promo_end_evening: int) -> models.Promotion:
+def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
     response = requests.get(base_url)
     tree = lxml.html.fromstring(response.text)
     script_data = tree.xpath('//*[@id="pageWrapper"]//script[not(@type) and contains(text(), "hotShot")]')[0].text
