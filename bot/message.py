@@ -1,8 +1,10 @@
+import re
+
 import models
 
 
 def float_fucker(i: float) -> str:
-    return str(round(i, 2)).strip('0').strip('.')
+    return re.sub(r'(\.00)$', '', f'{i+.0000001:.2f}')
 
 
 def generate(promotion: models.Promotion) -> str:

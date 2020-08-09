@@ -1,6 +1,7 @@
 import pytest
 
-from bot.scrapers import _price_parser
+from bot import message
+from bot import scrapers
 
 
 @pytest.mark.parametrize(
@@ -32,5 +33,18 @@ from bot.scrapers import _price_parser
         ('1\t.\t24 zł', 1.24),
     ])
 def test_price_parser(price: str, expected_value):
-    parsed_price = _price_parser(price)
+    parsed_price = scrapers._price_parser(price)
     assert parsed_price == expected_value
+
+
+@pytest.mark.parametrize(
+    ('number', 'expected_sting'), [
+        (100, '100'),
+        (3.14159265359, '3.14'),
+        (8.555, '8.56'),
+        (1.001, '1'),
+    ],
+)
+def test_float_fucker(number: float, expected_sting: str):
+    number_string = message.float_fucker(number)
+    assert number_string == expected_sting
