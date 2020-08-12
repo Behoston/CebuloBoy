@@ -33,7 +33,7 @@ from bot import scrapers
         ('1\t.\t24 zł', 1.24),
     ])
 def test_price_parser(price: str, expected_value):
-    parsed_price = scrapers._price_parser(price)
+    parsed_price = scrapers.price_parser(price)
     assert parsed_price == expected_value
 
 
