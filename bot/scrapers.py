@@ -25,10 +25,12 @@ def alto() -> models.Promotion:
 
 
 def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
-    response = requests.get(base_url)
+    session = requests.session()
+    session.headers['User-Agent'] = 'CebuloBot - post promotions on Telegram, plz don\'t block...'
+    response = session.get(base_url)
     tree = lxml.html.fromstring(response.text)
     script_data = tree.xpath('//*[@id="pageWrapper"]//script[not(@type) and contains(text(), "hotShot")]')[0].text
-    match = re.search(r"window.__INITIAL_STATE__\['app'\]\s+=\s+(?P<data>.*);", script_data)
+    match = re.search(r"window.__INITIAL_STATE__\['app']\s+=\s+(?P<data>.*);", script_data)
     data = json.loads(match.group('data'))
     hot_shot_data = data['productsLists']['hotShot'][0]['extend']
     old_price = hot_shot_data['oldPrice']
@@ -240,7 +242,7 @@ def price_parser(price: str) -> float:
 if __name__ == '__main__':
     from bot.message import generate
 
-    promo = zadowolenie()
+    promo = alto()
     if promo:
         print(generate(promo))
     else:
