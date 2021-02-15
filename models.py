@@ -87,7 +87,8 @@ class Promotion(peewee.Model):
 
 
 if __name__ == '__main__':
-    from playhouse.migrate import SqliteMigrator, migrate
+    from playhouse.migrate import SqliteMigrator
+    from playhouse.migrate import migrate
 
     db.connect()
     db.create_tables([Shop, Promotion])

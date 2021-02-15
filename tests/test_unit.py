@@ -1,7 +1,6 @@
 import pytest
 
-from bot import message
-from bot import scrapers
+from bot import message, scrapers
 
 
 @pytest.mark.parametrize(

@@ -10,8 +10,7 @@ import telepot
 
 import config
 import models
-from bot import message
-from bot import scrapers
+from bot import message, scrapers
 
 PROMOTION_PADDING = int(os.getenv('PROMOTION_PADDING', '5'))
 
