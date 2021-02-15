@@ -29,7 +29,7 @@ def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
     session.headers['User-Agent'] = 'CebuloBot - post promotions on Telegram, plz don\'t block...'
     response = session.get(base_url)
     tree = lxml.html.fromstring(response.text)
-    script_data = tree.xpath('//*[@id="pageWrapper"]//script[not(@type) and contains(text(), "hotShot")]')[0].text
+    script_data = tree.xpath('//script[not(@type) and contains(text(), "hotShot")]')[0].text
     match = re.search(r"window.__INITIAL_STATE__\['app']\s+=\s+(?P<data>.*);", script_data)
     data = json.loads(match.group('data'))
     hot_shot_data = data['productsLists']['hotShot'][0]['extend']
