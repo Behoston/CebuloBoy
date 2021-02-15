@@ -4,16 +4,39 @@
 #
 #    pip-compile
 #
-aiohttp==3.6.2            # via telepot
-async-timeout==3.0.1      # via aiohttp
-attrs==19.3.0             # via aiohttp
-certifi==2020.6.20        # via requests
-chardet==3.0.4            # via aiohttp, requests
-idna==2.10                # via requests, yarl
-lxml==4.6.2               # via -r requirements.in
-multidict==4.7.6          # via aiohttp, yarl
-peewee==3.13.3            # via -r requirements.in
-requests==2.24.0          # via -r requirements.in
-telepot==12.6             # via -r requirements.in
-urllib3==1.25.10          # via requests, telepot
-yarl==1.5.1               # via aiohttp
+aiohttp==3.7.3
+    # via telepot
+async-timeout==3.0.1
+    # via aiohttp
+attrs==20.3.0
+    # via aiohttp
+certifi==2020.12.5
+    # via requests
+chardet==3.0.4
+    # via
+    #   aiohttp
+    #   requests
+idna==2.10
+    # via
+    #   requests
+    #   yarl
+lxml==4.6.2
+    # via -r requirements.in
+multidict==5.1.0
+    # via
+    #   aiohttp
+    #   yarl
+peewee==3.14.1
+    # via -r requirements.in
+requests==2.25.1
+    # via -r requirements.in
+telepot==12.6
+    # via -r requirements.in
+typing-extensions==3.7.4.3
+    # via aiohttp
+urllib3==1.26.3
+    # via
+    #   requests
+    #   telepot
+yarl==1.6.3
+    # via aiohttp

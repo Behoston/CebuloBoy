@@ -4,32 +4,88 @@
 #
 #    pip-compile requirements-ci.in
 #
-aiohttp==3.6.2            # via -r requirements.txt, telepot
-async-timeout==3.0.1      # via -r requirements.txt, aiohttp
-attrs==19.3.0             # via -r requirements.txt, aiohttp, pytest
-certifi==2020.6.20        # via -r requirements.txt, requests
-chardet==3.0.4            # via -r requirements.txt, aiohttp, requests
-flake8-isort==3.0.1       # via -r requirements-ci.in
-flake8==3.8.3             # via -r requirements-ci.in, flake8-isort
-idna==2.10                # via -r requirements.txt, requests, yarl
-iniconfig==1.0.1          # via pytest
-isort[pyproject]==4.3.21  # via -r requirements-ci.in, flake8-isort
-lxml==4.6.2               # via -r requirements.txt
-mccabe==0.6.1             # via flake8
-more-itertools==8.4.0     # via pytest
-multidict==4.7.6          # via -r requirements.txt, aiohttp, yarl
-packaging==20.4           # via pytest
-peewee==3.13.3            # via -r requirements.txt
-pluggy==0.13.1            # via pytest
-py==1.9.0                 # via pytest
-pycodestyle==2.6.0        # via flake8
-pyflakes==2.2.0           # via flake8
-pyparsing==2.4.7          # via packaging
-pytest==6.0.1             # via -r requirements-ci.in
-requests==2.24.0          # via -r requirements.txt
-six==1.15.0               # via packaging
-telepot==12.6             # via -r requirements.txt
-testfixtures==6.14.1      # via flake8-isort
-toml==0.10.1              # via isort, pytest
-urllib3==1.25.10          # via -r requirements.txt, requests, telepot
-yarl==1.5.1               # via -r requirements.txt, aiohttp
+aiohttp==3.7.3
+    # via
+    #   -r requirements.txt
+    #   telepot
+async-timeout==3.0.1
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+attrs==20.3.0
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+    #   pytest
+certifi==2020.12.5
+    # via
+    #   -r requirements.txt
+    #   requests
+chardet==3.0.4
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+    #   requests
+flake8-isort==4.0.0
+    # via -r requirements-ci.in
+flake8==3.8.4
+    # via
+    #   -r requirements-ci.in
+    #   flake8-isort
+idna==2.10
+    # via
+    #   -r requirements.txt
+    #   requests
+    #   yarl
+iniconfig==1.1.1
+    # via pytest
+isort==5.7.0
+    # via
+    #   -r requirements-ci.in
+    #   flake8-isort
+lxml==4.6.2
+    # via -r requirements.txt
+mccabe==0.6.1
+    # via flake8
+multidict==5.1.0
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+    #   yarl
+packaging==20.9
+    # via pytest
+peewee==3.14.1
+    # via -r requirements.txt
+pluggy==0.13.1
+    # via pytest
+py==1.10.0
+    # via pytest
+pycodestyle==2.6.0
+    # via flake8
+pyflakes==2.2.0
+    # via flake8
+pyparsing==2.4.7
+    # via packaging
+pytest==6.2.2
+    # via -r requirements-ci.in
+requests==2.25.1
+    # via -r requirements.txt
+telepot==12.6
+    # via -r requirements.txt
+testfixtures==6.17.1
+    # via flake8-isort
+toml==0.10.2
+    # via pytest
+typing-extensions==3.7.4.3
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+urllib3==1.26.3
+    # via
+    #   -r requirements.txt
+    #   requests
+    #   telepot
+yarl==1.6.3
+    # via
+    #   -r requirements.txt
+    #   aiohttp
