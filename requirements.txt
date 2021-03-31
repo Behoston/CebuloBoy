@@ -20,7 +20,7 @@ idna==2.10
     # via
     #   requests
     #   yarl
-lxml==4.6.2
+lxml==4.6.3
     # via -r requirements.in
 multidict==5.1.0
     # via
