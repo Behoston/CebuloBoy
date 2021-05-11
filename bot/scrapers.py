@@ -96,18 +96,18 @@ def morele() -> models.Promotion or None:
 def hard_pc() -> models.Promotion or None:
     response = requests.get('https://sklep.hard-pc.pl/')
     tree = lxml.html.fromstring(response.text)
-    promo = tree.xpath('//div[contains(@class, "hot-deal")]//div[@class="item-info"]')
+    promo = tree.xpath('//article[@class="box-f"]/div')
     if not promo:
         return None
     else:
         promo = promo[0]
-    product_link = promo.xpath('.//a')[0]
+    product_link = promo.xpath('.//h3/a')[0]
     product_name = product_link.text.strip()
-    product_url = 'https://sklep.hard-pc.pl/' + product_link.get('href').split('?')[0]
-    price = promo.xpath('.//span[@class="price"]')[0]
-    old_price = price.xpath('.//strike')[0].text.strip()
+    product_url = 'https://sklep.hard-pc.pl/' + product_link.get('href').split('?')[0].strip()
+    price = promo.xpath('.//p[@class="prices"]')[0]
+    old_price = price.xpath('.//span[@class="old"]')[0].text.strip()
     old_price = price_parser(old_price)
-    new_price = price.xpath('.//span')[0].text.strip()
+    new_price = price.xpath('.//span[@class="default promo"]')[0].text.strip()
     new_price = price_parser(new_price)
     return models.Promotion(
         shop='hard-pc',
@@ -242,7 +242,7 @@ def price_parser(price: str) -> float:
 if __name__ == '__main__':
     from bot.message import generate
 
-    promo = alto()
+    promo = zadowolenie()
     if promo:
         print(generate(promo))
     else:
