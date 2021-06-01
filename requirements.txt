@@ -34,7 +34,7 @@ telepot==12.6
     # via -r requirements.in
 typing-extensions==3.7.4.3
     # via aiohttp
-urllib3==1.26.3
+urllib3==1.26.5
     # via
     #   requests
     #   telepot
