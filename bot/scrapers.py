@@ -120,7 +120,10 @@ def hard_pc() -> models.Promotion or None:
 
 
 def komputronik() -> typing.List[models.Promotion]:
-    response = requests.get('https://www.komputronik.pl/frontend-api/product/box/occasions')
+    session = requests.session()
+    session.headers['User-Agent'] = get_random_user_agent()
+    response = session.get('https://www.komputronik.pl/frontend-api/product/box/occasions')
+    print(response)
     promotions = response.json()
     return [
         models.Promotion(
