@@ -46,6 +46,7 @@ scrapers_map = {
     'komputronik': scrapers.komputronik,
     'proline': scrapers.proline,
     'zadowolenie': scrapers.zadowolenie,
+    'combat': scrapers.combat,
 }
 
 
