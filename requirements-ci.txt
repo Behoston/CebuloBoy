@@ -26,12 +26,12 @@ chardet==3.0.4
     #   -r requirements.txt
     #   aiohttp
     #   requests
-flake8-isort==4.0.0
-    # via -r requirements-ci.in
 flake8==3.8.4
     # via
     #   -r requirements-ci.in
     #   flake8-isort
+flake8-isort==4.0.0
+    # via -r requirements-ci.in
 idna==2.10
     # via
     #   -r requirements.txt
@@ -43,7 +43,7 @@ isort==5.7.0
     # via
     #   -r requirements-ci.in
     #   flake8-isort
-lxml==4.6.2
+lxml==4.6.5
     # via -r requirements.txt
 mccabe==0.6.1
     # via flake8
