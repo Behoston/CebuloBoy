@@ -258,6 +258,31 @@ def zadowolenie() -> models.Promotion or None:
     )
 
 
+def amso() -> models.Promotion or None:
+    base_url = 'https://amso.pl/'
+    response = requests.get(base_url)
+    tree = lxml.html.fromstring(response.text)
+    promo = tree.xpath('//div[@id="main_hotspot_zone1"]')[0]
+    link = promo.xpath('.//a[@class="product-name"]')
+    new_price = price_parser(promo.xpath('.//*[@class="price"]')[0].text)
+    old_price = price_parser(promo.xpath('.//*[@class="max-price"]')[0].text)
+    items_and_date = promo.xpath('.//*[contains(@class,"product_timer ")]')[0]
+    end_date = datetime.date.fromisoformat(items_and_date.get('data-date'))
+    end_datetime = datetime.datetime.combine(end_date, datetime.time.max)
+    total_item = int(items_and_date.get('data-init-amount'))
+    available_item = int(items_and_date.get('data-amount'))
+    return models.Promotion(
+        shop='amso',
+        product_name=link[0].text,
+        old_price=old_price,
+        new_price=new_price,
+        url=base_url + link[0].get('href'),
+        end_date=end_datetime,
+        items_available=available_item,
+        items_sold=total_item - available_item,
+    )
+
+
 def get_random_user_agent() -> str:
     user_agents = [
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
@@ -290,7 +315,7 @@ def price_parser(price: str) -> float:
 if __name__ == '__main__':
     from bot.message import generate
 
-    promo = combat()
+    promo = amso()
     if promo:
         print(generate(promo))
     else:

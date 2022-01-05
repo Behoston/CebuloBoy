@@ -9,3 +9,4 @@ PYTHONPATH="${PYTHONPATH}:/root/cebulobot/"
 0 * * * * root python3 /root/cebulobot/bot/boy.py --shop proline >> /var/log/cebulobot.log 2>&1
 0 * * * * root python3 /root/cebulobot/bot/boy.py --shop zadowolenie >> /var/log/cebulobot.log 2>&1
 0 * * * * root python3 /root/cebulobot/bot/boy.py --shop combat >> /var/log/cebulobot.log 2>&1
+0 * * * * root python3 /root/cebulobot/bot/boy.py --shop amso >> /var/log/cebulobot.log 2>&1
