@@ -8,7 +8,7 @@ from pprint import pprint
 
 import telepot
 
-import config
+import config  # isort:skip
 import models
 from bot import message, scrapers
 

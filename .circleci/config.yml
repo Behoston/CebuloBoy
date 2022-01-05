@@ -19,9 +19,8 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-            pip install -r requirements-ci.txt
+            pip install --upgrade pip setuptools wheel pip-tools
+            pip-sync requirements-ci.txt
 
       - save_cache:
           paths:
