@@ -2,7 +2,7 @@ from datetime import datetime
 
 import peewee
 
-from config import DB_FILE  # isort:skip
+from config import DB_FILE
 
 db = peewee.SqliteDatabase(DB_FILE)
 

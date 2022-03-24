@@ -8,9 +8,10 @@ from pprint import pprint
 
 import telepot
 
-import config  # isort:skip
 import models
 from bot import message, scrapers
+
+import config  # isort:skip
 
 PROMOTION_PADDING = int(os.getenv('PROMOTION_PADDING', '5'))
 

@@ -25,45 +25,16 @@ def alto() -> models.Promotion:
 
 
 def combat() -> models.Promotion:
-    response = requests.post(
-        url='https://www.combat.pl/graphql',
-        json={
-            "query": "query{hotshot(promotion_id: 0){promotion_id available is_current "
-                     "customer_limit name photo product_url regular_url regular_price promotion_price "
-                     "discount total left sold percent start_time end_time time_to_end current_time regulations }}",
-        }
-    )
-    data = response.json()['data']['hotshot']
-    data = {
-        'promotion_id': 407,
-        'available': True,
-        'is_current': True,
-        'customer_limit': 1,
-        'name': 'Lornetka Delta Optical StarLight 15x70',
-        'photo': '/m/i/miniatura-1_11.jpg',
-        'product_url': 'https://www.combat.pl/goracy_strzal',
-        'regular_url': 'https://www.combat.pl/001007122-lornetka-delta-optical-starlight-15x70.html',
-        'regular_price': '<span class="price">359,00\xa0zł</span>',
-        'promotion_price': '<span class="price">309,99\xa0zł</span>',
-        'discount': '14%',
-        'total': 10,
-        'left': 10,
-        'sold': 0,
-        'percent': 100,
-        'start_time': '2021-06-17 00:00:00',
-        'end_time': '2021-06-17 23:59:59',
-        'time_to_end': 1623974399,
-        'current_time': '2021-06-17 10:10:00',
-        'regulations': 'https://lp.combat.pl/a/pdf/combat_goracy_strzal_regulamin_promocji.pdf',
-    }
+    response = requests.get(url='https://www.combat.pl/rest/V1/get-hot-shot')
+    data = response.json()[0]
 
     return models.Promotion(
         shop='combat',
-        product_name=data['name'],
-        old_price=float(data['regular_price'].strip('\xa0zł</span>').strip('<span class="price">').replace(',', '.')),
-        new_price=float(data['promotion_price'].strip('\xa0zł</span>').strip('<span class="price">').replace(',', '.')),
-        url=f'https://www.combat.pl/goracy_strzal/{data["promotion_id"]}',
-        end_date=datetime.datetime.strptime(data['end_time'], '%Y-%m-%d %H:%M:%S'),
+        product_name=data['title'],
+        old_price=float(data['regularPrice'].strip('\xa0zł</span>').strip('<span class="price">').replace(',', '.')),
+        new_price=float(data['promoPrice'].strip('\xa0zł</span>').strip('<span class="price">').replace(',', '.')),
+        url=f'https://www.combat.pl/goracy_strzal/{data["promotionId"]}',
+        end_date=datetime.datetime.now() + datetime.timedelta(seconds=data['total']),
         items_available=data['left'],
         items_sold=data['sold'],
     )
@@ -315,7 +286,7 @@ def price_parser(price: str) -> float:
 if __name__ == '__main__':
     from bot.message import generate
 
-    promo = amso()
+    promo = combat()
     if promo:
         print(generate(promo))
     else:
