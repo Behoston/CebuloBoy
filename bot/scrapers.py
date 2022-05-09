@@ -42,7 +42,7 @@ def combat() -> models.Promotion:
 
 def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
     session = requests.session()
-    session.headers['User-Agent'] = 'CebuloBot - post promotions on Telegram, plz don\'t block...'
+    session.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)'
     response = session.get(base_url)
     tree = lxml.html.fromstring(response.text)
     script_data = tree.xpath('//script[not(@type) and contains(text(), "hotShot")]')[0].text
@@ -286,7 +286,7 @@ def price_parser(price: str) -> float:
 if __name__ == '__main__':
     from bot.message import generate
 
-    promo = combat()
+    promo = xkom()
     if promo:
         print(generate(promo))
     else:
