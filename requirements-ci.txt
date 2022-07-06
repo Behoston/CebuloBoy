@@ -52,7 +52,7 @@ isort==5.10.1
     # via
     #   -r requirements-ci.in
     #   flake8-isort
-lxml==4.7.1
+lxml==4.9.1
     # via -r requirements.txt
 mccabe==0.6.1
     # via flake8
