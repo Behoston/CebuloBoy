@@ -192,43 +192,6 @@ def proline() -> models.Promotion or None:
         items_sold=sold,
     )
 
-
-def zadowolenie() -> models.Promotion or None:
-    response = requests.get('https://www.zadowolenie.pl/')
-    tree = lxml.html.fromstring(response.text)
-    promo = tree.xpath('//div[contains(@class, "dayOffer") and contains(@class, "product_box_widget")]')[0]
-    product_name = promo.xpath('.//a[contains(@class, "product-name")]')[0].text.strip()
-    try:
-        old_price = promo.xpath('.//span[contains(@class, "OldPrice")]')[0].text
-        old_price = price_parser(old_price)
-        new_price = promo.xpath('.//*[contains(@class, "price_new")]/span')[0].text
-        new_price = price_parser(new_price)
-    except IndexError:
-        if promo.xpath('.//p[contains(@class, "m-price")]'):
-            return None
-        raise
-    url = promo.xpath('.//a')[0].get('href')
-    counter = promo.xpath('.//*[contains(@class, "js-counter")]')[0]
-    end_time = counter.get('data-end-time')
-    end_time = datetime.time.fromisoformat(end_time)
-    end_date = datetime.datetime.now()
-    if end_time < end_date.time():
-        end_date += datetime.timedelta(days=1)
-    end_date = end_date.replace(
-        hour=end_time.hour,
-        minute=end_time.minute,
-        second=end_time.second,
-    )
-    return models.Promotion(
-        shop='zadowolenie',
-        product_name=product_name,
-        old_price=old_price,
-        new_price=new_price,
-        url=url,
-        end_date=end_date,
-    )
-
-
 def amso() -> models.Promotion or None:
     base_url = 'https://amso.pl/'
     response = requests.get(base_url)
