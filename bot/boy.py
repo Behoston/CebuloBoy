@@ -69,17 +69,13 @@ def wait_for_promotions(shop_name: str) -> typing.List[models.Promotion]:
     wait_time = datetime.timedelta(seconds=5)
     while start + timeout > datetime.datetime.now():
         try:
-            promotion = scrape_fn()
+            promotions = scrape_fn()
         except Exception as e:
             error_message = f"Scrape failed for shop {shop_name}! {e}"
             logger.error(error_message)
             send_error(error_message)
-            promotion = None
-        if promotion:
-            if not isinstance(promotion, list):
-                promotions = [promotion]
-            else:
-                promotions = promotion
+            promotions = None
+        if promotions:
             i = PROMOTION_PADDING + len(promotions)
             last_promotions_names = {
                 last_promotion.product_name

@@ -10,25 +10,25 @@ import requests
 import models
 
 
-def xkom() -> models.Promotion:
+def xkom() -> typing.List[models.Promotion]:
     return _xkom_alto(
         base_url='https://www.x-kom.pl',
         shop='xkom',
     )
 
 
-def alto() -> models.Promotion:
+def alto() -> typing.List[models.Promotion]:
     return _xkom_alto(
         base_url='https://www.al.to',
         shop='alto',
     )
 
 
-def combat() -> models.Promotion:
+def combat() -> typing.List[models.Promotion]:
     response = requests.get(url='https://www.combat.pl/rest/V1/get-hot-shot')
     data = response.json()[0]
 
-    return models.Promotion(
+    return [models.Promotion(
         shop='combat',
         product_name=data['title'],
         old_price=float(data['regularPrice'].strip('\xa0zł</span>').strip('<span class="price">').replace(',', '.')),
@@ -37,10 +37,10 @@ def combat() -> models.Promotion:
         end_date=datetime.datetime.now() + datetime.timedelta(seconds=data['total']),
         items_available=data['left'],
         items_sold=data['sold'],
-    )
+    )]
 
 
-def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
+def _xkom_alto(base_url: str, shop: str) -> typing.List[models.Promotion]:
     session = requests.session()
     session.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)'
     response = session.get(base_url)
@@ -57,7 +57,7 @@ def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
     end_date = datetime.datetime.fromisoformat(hot_shot_data['promotionEnd'].replace('Z', '+00:00')).astimezone()
     sold = hot_shot_data['saleCount']
     left = hot_shot_data['promotionTotalCount'] - sold
-    return models.Promotion(
+    return [models.Promotion(
         shop=shop,
         product_name=product_name,
         old_price=old_price,
@@ -66,24 +66,24 @@ def _xkom_alto(base_url: str, shop: str) -> models.Promotion:
         end_date=end_date,
         items_available=left,
         items_sold=sold,
-    )
+    )]
 
 
-def morele() -> models.Promotion or None:
+def morele() -> typing.List[models.Promotion]:
     response = requests.get('https://www.morele.net/')
     tree = lxml.html.fromstring(response.text)
     promo = tree.xpath('//div[@class="home-sections-promotion"]')
     if not promo:
-        return
+        return []
     else:
         promo = promo[0]
     product_link = promo.xpath('.//div[@class="promo-box-name"]/a')[0]
     product_name = product_link.text.strip()
     product_url = product_link.get('href')
     price = promo.xpath('.//div[@class="promo-box-price"]')[0]
-    old_price = price.xpath('.//div[contains(@class, "old")]')[0].text.strip()
+    old_price = price.xpath('.//div[contains(@class, "old")]')[1].tail.strip()
     old_price = price_parser(old_price)
-    new_price = price.xpath('.//div[contains(@class, "new")]')[0].text.strip()
+    new_price = price.xpath('.//div[contains(@class, "new")]')[1].tail.strip()
     new_price = price_parser(new_price)
     code = promo.xpath('.//div[@class="promo-box-code"]/div[@class="promo-box-code-value"]')
     if code:
@@ -96,7 +96,7 @@ def morele() -> models.Promotion or None:
     sold = int(re.findall(r'\d+', sold)[0])
     left = promo.xpath('.//div[@class="status-box-was"]')[0].text
     left = int(re.findall(r'\d+', left)[0])
-    return models.Promotion(
+    return [models.Promotion(
         shop='morele',
         product_name=product_name,
         old_price=old_price,
@@ -106,15 +106,15 @@ def morele() -> models.Promotion or None:
         end_date=end_date,
         items_available=left,
         items_sold=sold,
-    )
+    )]
 
 
-def hard_pc() -> models.Promotion or None:
+def hard_pc() -> typing.List[models.Promotion]:
     response = requests.get('https://sklep.hard-pc.pl/')
     tree = lxml.html.fromstring(response.text)
     promo = tree.xpath('//article[@class="box-f"]/div')
     if not promo:
-        return None
+        return []
     else:
         promo = promo[0]
     product_link = promo.xpath('.//h3/a')[0]
@@ -125,14 +125,14 @@ def hard_pc() -> models.Promotion or None:
     old_price = price_parser(old_price)
     new_price = price.xpath('.//span[@class="default promo"]')[0].text.strip()
     new_price = price_parser(new_price)
-    return models.Promotion(
+    return [models.Promotion(
         shop='hard-pc',
         product_name=product_name,
         old_price=old_price,
         new_price=new_price,
         url=product_url,
         end_date=None,
-    )
+    )]
 
 
 def komputronik() -> typing.List[models.Promotion]:
@@ -155,20 +155,20 @@ def komputronik() -> typing.List[models.Promotion]:
     ]
 
 
-def proline() -> models.Promotion or None:
+def proline() -> typing.List[models.Promotion]:
     session = requests.session()
     session.headers['User-Agent'] = get_random_user_agent()
     response = session.get('https://proline.pl/')
     tree = lxml.html.fromstring(response.text)
     promo = tree.xpath('//div[@id="headshot"]')
     if not promo:
-        return None
+        return []
     else:
         promo = promo[0]
     try:
         product_link = promo.xpath('.//h2/a')[0]
     except IndexError:
-        return None
+        return []
     product_name = product_link.text.strip()
     product_url = 'https://proline.pl' + product_link.get('href').split('?')[0]
     old_price = promo.xpath('.//*[@class="cena_old"]/b')[0].text.strip()
@@ -181,7 +181,7 @@ def proline() -> models.Promotion or None:
     response = session.get('https://proline.pl/headshot-ilosc.php')
     tree = lxml.html.fromstring(response.text)
     left, sold = [int(i.text) for i in tree.xpath('//b')]
-    return models.Promotion(
+    return [models.Promotion(
         shop='proline',
         product_name=product_name,
         old_price=old_price,
@@ -190,9 +190,9 @@ def proline() -> models.Promotion or None:
         end_date=end_date,
         items_available=left,
         items_sold=sold,
-    )
+    )]
 
-def amso() -> models.Promotion or None:
+def amso() -> typing.List[models.Promotion]:
     base_url = 'https://amso.pl/'
     response = requests.get(base_url)
     tree = lxml.html.fromstring(response.text)
@@ -205,7 +205,7 @@ def amso() -> models.Promotion or None:
     end_datetime = datetime.datetime.combine(end_date, datetime.time.max)
     total_item = int(items_and_date.get('data-init-amount'))
     available_item = int(items_and_date.get('data-amount'))
-    return models.Promotion(
+    return [models.Promotion(
         shop='amso',
         product_name=link[0].text,
         old_price=old_price,
@@ -214,7 +214,7 @@ def amso() -> models.Promotion or None:
         end_date=end_datetime,
         items_available=available_item,
         items_sold=total_item - available_item,
-    )
+    )]
 
 
 def get_random_user_agent() -> str:
@@ -249,8 +249,5 @@ def price_parser(price: str) -> float:
 if __name__ == '__main__':
     from bot.message import generate
 
-    promo = xkom()
-    if promo:
+    for promo in amso():
         print(generate(promo))
-    else:
-        print("No promo")
