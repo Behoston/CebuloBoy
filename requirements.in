@@ -2,3 +2,4 @@ telepot==12.6
 lxml
 requests
 peewee
+curl_cffi

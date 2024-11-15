@@ -6,7 +6,7 @@ import typing
 
 import lxml.html
 import requests
-
+import curl_cffi.requests
 import models
 
 
@@ -41,9 +41,7 @@ def combat() -> typing.List[models.Promotion]:
 
 
 def _xkom_alto(base_url: str, shop: str) -> typing.List[models.Promotion]:
-    session = requests.session()
-    session.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)'
-    response = session.get(base_url)
+    response = curl_cffi.requests.get(base_url, impersonate="chrome")
     tree = lxml.html.fromstring(response.text)
     script_data = tree.xpath('//script[not(@type) and contains(text(), "hotShot")]')[0].text
     match = re.search(r"window.__INITIAL_STATE__\['app']\s+=\s+(?P<data>.*);", script_data)
